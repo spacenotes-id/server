@@ -5,6 +5,7 @@ import (
 	"reflect"
 
 	"github.com/goioc/di"
+	"github.com/tfkhdyt/SpaceNotes/backend/internal/application/usecase"
 )
 
 type bean struct {
@@ -36,6 +37,10 @@ func InitDi() {
 		bean{
 			beanID:   "hashingService",
 			beanType: nil,
+		},
+		bean{
+			beanID:   "userUsecase",
+			beanType: reflect.TypeOf((*usecase.UserUsecase)(nil)),
 		},
 	)
 }
