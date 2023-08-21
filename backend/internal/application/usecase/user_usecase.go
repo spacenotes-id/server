@@ -1,8 +1,6 @@
 package usecase
 
 import (
-	"fmt"
-
 	"github.com/tfkhdyt/SpaceNotes/backend/internal/application/dto"
 	"github.com/tfkhdyt/SpaceNotes/backend/internal/domain/repository"
 	"github.com/tfkhdyt/SpaceNotes/backend/internal/domain/service"
@@ -12,20 +10,6 @@ import (
 type UserUsecase struct {
 	userRepo       repository.UserRepo    `di.inject:"userRepo"`
 	hashingService service.HashingService `di.inject:"hashingService"`
-}
-
-func (u *UserUsecase) verifyPassword(
-	hashedPassword string,
-	password string,
-) error {
-	if err := u.hashingService.ComparePassword(
-		hashedPassword,
-		password,
-	); err != nil {
-		return exception.NewHTTPError(400, "Invalid password")
-	}
-
-	return nil
 }
 
 func (u *UserUsecase) Register(
@@ -58,7 +42,7 @@ func (u *UserUsecase) Register(
 	return response, nil
 }
 
-func (u *UserUsecase) FindUserByEmail(
+func (u *UserUsecase) FindUserByID(
 	id int,
 ) (*dto.FindUserByIDResponse, error) {
 	user, err := u.userRepo.FindUserByID(id)
@@ -78,10 +62,7 @@ func (u *UserUsecase) UpdateUser(
 	data *dto.UpdateUserRequest,
 ) (*dto.UpdateUserResponse, error) {
 	if _, err := u.userRepo.FindUserByID(id); err != nil {
-		return nil, exception.NewHTTPError(
-			404,
-			fmt.Sprintf("User with id %v is not found", id),
-		)
+		return nil, err
 	}
 
 	if data.Username != nil {
@@ -116,7 +97,10 @@ func (u *UserUsecase) UpdateEmail(
 		return nil, err
 	}
 
-	if err := u.verifyPassword(user.Password, data.Password); err != nil {
+	if err := u.hashingService.ComparePassword(
+		user.Password,
+		data.Password,
+	); err != nil {
 		return nil, err
 	}
 
@@ -146,7 +130,10 @@ func (u *UserUsecase) UpdatePassword(
 		return nil, err
 	}
 
-	if err := u.verifyPassword(user.Password, data.OldPassword); err != nil {
+	if err := u.hashingService.ComparePassword(
+		user.Password,
+		data.OldPassword,
+	); err != nil {
 		return nil, err
 	}
 
