@@ -13,10 +13,10 @@ type User struct {
 }
 
 type NewUser struct {
-	FullName *string
-	Username string
-	Email    string
-	Password string
+	FullName *string `json:"full_name" valid:"stringlength(2|70)~Full name length should be at least 2 - 70 characters"`
+	Username string  `json:"username" valid:"required~Username is required,stringlength(3|16)~Username length should be at least 3 - 16 characters"`
+	Email    string  `json:"email" valid:"required~Email is required,email~Invalid email"`
+	Password string  `json:"password" valid:"required~Password is required"`
 }
 
 type CreatedUser struct {
