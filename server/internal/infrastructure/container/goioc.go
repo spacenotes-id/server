@@ -1,11 +1,14 @@
 package container
 
 import (
+	"context"
 	"log"
 	"reflect"
 
 	"github.com/goioc/di"
 	"github.com/tfkhdyt/SpaceNotes/server/internal/application/usecase"
+	"github.com/tfkhdyt/SpaceNotes/server/internal/infrastructure/database/postgres"
+	postgresRepo "github.com/tfkhdyt/SpaceNotes/server/internal/infrastructure/repository/postgres"
 	"github.com/tfkhdyt/SpaceNotes/server/internal/interface/api/controller"
 )
 
@@ -33,7 +36,7 @@ func InitDi() {
 	registerBeans(
 		bean{
 			beanID:   "userRepo",
-			beanType: nil,
+			beanType: reflect.TypeOf((*postgresRepo.UserRepoPostgres)(nil)),
 		},
 		bean{
 			beanID:   "hashingService",
@@ -52,4 +55,15 @@ func InitDi() {
 			beanType: reflect.TypeOf((*controller.UserController)(nil)),
 		},
 	)
+
+	if _, err := di.RegisterBeanInstance(
+		"sqlcQuerier",
+		postgres.GetPostgresSQLCQuerier(context.Background()),
+	); err != nil {
+		log.Fatalf(
+			"ERROR(sqlcQuerier): %v. %v",
+			"Failed to register sqlc querier",
+			err,
+		)
+	}
 }
