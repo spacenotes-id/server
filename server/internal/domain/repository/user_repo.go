@@ -1,17 +1,21 @@
 package repository
 
-import "github.com/tfkhdyt/SpaceNotes/server/internal/domain/entity"
+import (
+	"context"
+
+	"github.com/tfkhdyt/SpaceNotes/server/internal/domain/entity"
+)
 
 type UserRepo interface {
-	CreateUser(user *entity.NewUser) (*entity.CreatedUser, error)
+	CreateUser(ctx context.Context, user *entity.NewUser) (*entity.CreatedUser, error)
 
-	FindUserByID(id int) (*entity.User, error)
-	FindUserByUsername(username string) (*entity.User, error)
-	FindUserByEmail(email string) (*entity.User, error)
+	FindUserByID(ctx context.Context, id int) (*entity.User, error)
+	FindUserByUsername(ctx context.Context, username string) (*entity.User, error)
+	FindUserByEmail(ctx context.Context, email string) (*entity.User, error)
 
-	UpdateUser(id int, data *entity.UpdateUser) (*entity.UpdatedUser, error)
-	UpdateEmail(id int, email string) (*entity.UpdatedUser, error)
-	UpdatePassword(id int, password string) error
+	UpdateUser(ctx context.Context, id int, data *entity.UpdateUser) (*entity.UpdatedUser, error)
+	UpdateEmail(ctx context.Context, id int, email string) (*entity.UpdatedUser, error)
+	UpdatePassword(ctx context.Context, id int, password string) error
 
-	DeleteUser(id int) error
+	DeleteUser(ctx context.Context, id int) error
 }

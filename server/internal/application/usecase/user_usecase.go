@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"context"
+
 	"github.com/tfkhdyt/SpaceNotes/server/internal/application/dto"
 	"github.com/tfkhdyt/SpaceNotes/server/internal/domain/repository"
 	"github.com/tfkhdyt/SpaceNotes/server/internal/domain/service"
@@ -15,11 +17,16 @@ type UserUsecase struct {
 func (u *UserUsecase) Register(
 	newUser *dto.RegisterRequest,
 ) (*dto.RegisterResponse, error) {
-	if _, err := u.userRepo.FindUserByUsername(newUser.Username); err == nil {
+	ctx := context.Background()
+
+	if _, err := u.userRepo.FindUserByUsername(
+		ctx,
+		newUser.Username,
+	); err == nil {
 		return nil, err
 	}
 
-	if _, err := u.userRepo.FindUserByEmail(newUser.Email); err == nil {
+	if _, err := u.userRepo.FindUserByEmail(ctx, newUser.Email); err == nil {
 		return nil, err
 	}
 
@@ -29,7 +36,7 @@ func (u *UserUsecase) Register(
 		return nil, errHash
 	}
 
-	registeredUser, errRegister := u.userRepo.CreateUser(newUser)
+	registeredUser, errRegister := u.userRepo.CreateUser(ctx, newUser)
 	if errRegister != nil {
 		return nil, errRegister
 	}
@@ -45,7 +52,9 @@ func (u *UserUsecase) Register(
 func (u *UserUsecase) FindUserByID(
 	id int,
 ) (*dto.FindUserByIDResponse, error) {
-	user, err := u.userRepo.FindUserByID(id)
+	ctx := context.Background()
+
+	user, err := u.userRepo.FindUserByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -61,17 +70,19 @@ func (u *UserUsecase) UpdateUser(
 	id int,
 	data *dto.UpdateUserRequest,
 ) (*dto.UpdateUserResponse, error) {
-	if _, err := u.userRepo.FindUserByID(id); err != nil {
+	ctx := context.Background()
+
+	if _, err := u.userRepo.FindUserByID(ctx, id); err != nil {
 		return nil, err
 	}
 
 	if data.Username != nil {
-		if _, err := u.userRepo.FindUserByUsername(*data.Username); err != nil {
+		if _, err := u.userRepo.FindUserByUsername(ctx, *data.Username); err != nil {
 			return nil, err
 		}
 	}
 
-	updatedUser, err := u.userRepo.UpdateUser(id, data)
+	updatedUser, err := u.userRepo.UpdateUser(ctx, id, data)
 	if err != nil {
 		return nil, err
 	}
@@ -88,12 +99,14 @@ func (u *UserUsecase) UpdateEmail(
 	id int,
 	data *dto.UpdateEmailRequest,
 ) (*dto.UpdateUserResponse, error) {
-	user, err := u.userRepo.FindUserByID(id)
+	ctx := context.Background()
+
+	user, err := u.userRepo.FindUserByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 
-	if _, err := u.userRepo.FindUserByEmail(data.NewEmail); err != nil {
+	if _, err := u.userRepo.FindUserByEmail(ctx, data.NewEmail); err != nil {
 		return nil, err
 	}
 
@@ -104,7 +117,7 @@ func (u *UserUsecase) UpdateEmail(
 		return nil, err
 	}
 
-	updatedUser, errUpdate := u.userRepo.UpdateEmail(id, data.NewEmail)
+	updatedUser, errUpdate := u.userRepo.UpdateEmail(ctx, id, data.NewEmail)
 	if errUpdate != nil {
 		return nil, errUpdate
 	}
@@ -121,11 +134,13 @@ func (u *UserUsecase) UpdatePassword(
 	id int,
 	data *dto.UpdatePasswordRequest,
 ) (*dto.UpdatePasswordResponse, error) {
+	ctx := context.Background()
+
 	if data.NewPassword != data.ConfirmPassword {
 		return nil, exception.NewHTTPError(400, "Invalid confirm password")
 	}
 
-	user, err := u.userRepo.FindUserByID(id)
+	user, err := u.userRepo.FindUserByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +158,7 @@ func (u *UserUsecase) UpdatePassword(
 		return nil, errHash
 	}
 
-	if err := u.userRepo.UpdatePassword(id, data.NewPassword); err != nil {
+	if err := u.userRepo.UpdatePassword(ctx, id, data.NewPassword); err != nil {
 		return nil, err
 	}
 
@@ -155,11 +170,13 @@ func (u *UserUsecase) UpdatePassword(
 }
 
 func (u *UserUsecase) DeleteUser(id int) (*dto.DeleteUserResponse, error) {
-	if _, err := u.userRepo.FindUserByID(id); err != nil {
+	ctx := context.Background()
+
+	if _, err := u.userRepo.FindUserByID(ctx, id); err != nil {
 		return nil, err
 	}
 
-	if err := u.userRepo.DeleteUser(id); err != nil {
+	if err := u.userRepo.DeleteUser(ctx, id); err != nil {
 		return nil, err
 	}
 
