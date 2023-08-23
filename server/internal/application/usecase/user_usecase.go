@@ -1,10 +1,10 @@
 package usecase
 
 import (
-	"github.com/tfkhdyt/SpaceNotes/backend/internal/application/dto"
-	"github.com/tfkhdyt/SpaceNotes/backend/internal/domain/repository"
-	"github.com/tfkhdyt/SpaceNotes/backend/internal/domain/service"
-	"github.com/tfkhdyt/SpaceNotes/backend/pkg/exception"
+	"github.com/tfkhdyt/SpaceNotes/server/internal/application/dto"
+	"github.com/tfkhdyt/SpaceNotes/server/internal/domain/repository"
+	"github.com/tfkhdyt/SpaceNotes/server/internal/domain/service"
+	"github.com/tfkhdyt/SpaceNotes/server/pkg/exception"
 )
 
 type UserUsecase struct {

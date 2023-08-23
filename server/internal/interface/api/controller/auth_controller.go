@@ -3,9 +3,9 @@ package controller
 import (
 	"github.com/asaskevich/govalidator"
 	"github.com/gofiber/fiber/v2"
-	"github.com/tfkhdyt/SpaceNotes/backend/internal/application/dto"
-	"github.com/tfkhdyt/SpaceNotes/backend/internal/application/usecase"
-	"github.com/tfkhdyt/SpaceNotes/backend/pkg/exception"
+	"github.com/tfkhdyt/SpaceNotes/server/internal/application/dto"
+	"github.com/tfkhdyt/SpaceNotes/server/internal/application/usecase"
+	"github.com/tfkhdyt/SpaceNotes/server/pkg/exception"
 )
 
 type AuthController struct {

@@ -1,6 +1,6 @@
 package dto
 
-import "github.com/tfkhdyt/SpaceNotes/backend/internal/domain/entity"
+import "github.com/tfkhdyt/SpaceNotes/server/internal/domain/entity"
 
 type (
 	RegisterRequest      = entity.NewUser

@@ -1,6 +1,6 @@
 package repository
 
-import "github.com/tfkhdyt/SpaceNotes/backend/internal/domain/entity"
+import "github.com/tfkhdyt/SpaceNotes/server/internal/domain/entity"
 
 type UserRepo interface {
 	CreateUser(user *entity.NewUser) (*entity.CreatedUser, error)
