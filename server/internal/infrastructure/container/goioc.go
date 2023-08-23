@@ -5,7 +5,8 @@ import (
 	"reflect"
 
 	"github.com/goioc/di"
-	"github.com/tfkhdyt/SpaceNotes/backend/internal/application/usecase"
+	"github.com/tfkhdyt/SpaceNotes/server/internal/application/usecase"
+	"github.com/tfkhdyt/SpaceNotes/server/internal/interface/api/controller"
 )
 
 type bean struct {
@@ -41,6 +42,14 @@ func InitDi() {
 		bean{
 			beanID:   "userUsecase",
 			beanType: reflect.TypeOf((*usecase.UserUsecase)(nil)),
+		},
+		bean{
+			beanID:   "authController",
+			beanType: reflect.TypeOf((*controller.AuthController)(nil)),
+		},
+		bean{
+			beanID:   "userController",
+			beanType: reflect.TypeOf((*controller.UserController)(nil)),
 		},
 	)
 }
