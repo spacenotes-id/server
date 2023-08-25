@@ -1,5 +1,7 @@
 package exception
 
+import "fmt"
+
 type HttpError struct {
 	message    string
 	statusCode uint
@@ -13,8 +15,9 @@ func (h *HttpError) StatusCode() uint {
 	return h.statusCode
 }
 
-func NewHTTPError(statusCode uint, message string) *HttpError {
-	return &HttpError{message, statusCode}
+func NewHTTPError(statusCode uint, message string, args ...any) *HttpError {
+	msg := fmt.Sprintf(message, args...)
+	return &HttpError{msg, statusCode}
 }
 
 type ValidationError struct {
