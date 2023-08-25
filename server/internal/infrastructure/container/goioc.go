@@ -9,7 +9,9 @@ import (
 	"github.com/tfkhdyt/SpaceNotes/server/internal/application/usecase"
 	"github.com/tfkhdyt/SpaceNotes/server/internal/infrastructure/database/postgres"
 	postgresRepo "github.com/tfkhdyt/SpaceNotes/server/internal/infrastructure/repository/postgres"
+	"github.com/tfkhdyt/SpaceNotes/server/internal/infrastructure/security"
 	"github.com/tfkhdyt/SpaceNotes/server/internal/interface/api/controller"
+	"github.com/tfkhdyt/SpaceNotes/server/internal/interface/api/route"
 )
 
 type bean struct {
@@ -40,7 +42,7 @@ func InitDi() {
 		},
 		bean{
 			beanID:   "hashingService",
-			beanType: nil,
+			beanType: reflect.TypeOf((*security.BcryptService)(nil)),
 		},
 		bean{
 			beanID:   "userUsecase",
@@ -54,6 +56,14 @@ func InitDi() {
 			beanID:   "userController",
 			beanType: reflect.TypeOf((*controller.UserController)(nil)),
 		},
+		bean{
+			beanID:   "authRoute",
+			beanType: reflect.TypeOf((*route.AuthRoute)(nil)),
+		},
+		bean{
+			beanID:   "userRoute",
+			beanType: reflect.TypeOf((*route.UserRoute)(nil)),
+		},
 	)
 
 	if _, err := di.RegisterBeanInstance(
@@ -65,5 +75,9 @@ func InitDi() {
 			"Failed to register sqlc querier",
 			err,
 		)
+	}
+
+	if err := di.InitializeContainer(); err != nil {
+		log.Fatalln("ERROR(InitializeContainer):", err)
 	}
 }
