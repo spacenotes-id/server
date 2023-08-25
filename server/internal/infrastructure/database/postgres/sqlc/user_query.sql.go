@@ -12,7 +12,7 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO "user" (
+INSERT INTO users (
   full_name, username, email, password
 ) VALUES (
   $1, $2, $3, $4
@@ -53,7 +53,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (CreateU
 }
 
 const deleteUser = `-- name: DeleteUser :exec
-DELETE FROM "user" WHERE id = $1
+DELETE FROM users WHERE id = $1
 `
 
 func (q *Queries) DeleteUser(ctx context.Context, id int32) error {
@@ -62,7 +62,7 @@ func (q *Queries) DeleteUser(ctx context.Context, id int32) error {
 }
 
 const findUserByEmail = `-- name: FindUserByEmail :one
-SELECT id, full_name, username, email, password, created_at, updated_at FROM "user" WHERE email = $1 LIMIT 1
+SELECT id, full_name, username, email, password, created_at, updated_at FROM users WHERE email = $1 LIMIT 1
 `
 
 func (q *Queries) FindUserByEmail(ctx context.Context, email string) (User, error) {
@@ -81,7 +81,7 @@ func (q *Queries) FindUserByEmail(ctx context.Context, email string) (User, erro
 }
 
 const findUserByID = `-- name: FindUserByID :one
-SELECT id, full_name, username, email, password, created_at, updated_at FROM "user" WHERE id = $1 LIMIT 1
+SELECT id, full_name, username, email, password, created_at, updated_at FROM users WHERE id = $1 LIMIT 1
 `
 
 func (q *Queries) FindUserByID(ctx context.Context, id int32) (User, error) {
@@ -100,7 +100,7 @@ func (q *Queries) FindUserByID(ctx context.Context, id int32) (User, error) {
 }
 
 const findUserByUsername = `-- name: FindUserByUsername :one
-SELECT id, full_name, username, email, password, created_at, updated_at FROM "user" WHERE username = $1 LIMIT 1
+SELECT id, full_name, username, email, password, created_at, updated_at FROM users WHERE username = $1 LIMIT 1
 `
 
 func (q *Queries) FindUserByUsername(ctx context.Context, username string) (User, error) {
@@ -119,7 +119,7 @@ func (q *Queries) FindUserByUsername(ctx context.Context, username string) (User
 }
 
 const updateEmail = `-- name: UpdateEmail :one
-UPDATE "user"
+UPDATE users
 SET email = $2
 WHERE id = $1
 RETURNING id, full_name, username, email, created_at, updated_at
@@ -154,7 +154,7 @@ func (q *Queries) UpdateEmail(ctx context.Context, arg UpdateEmailParams) (Updat
 }
 
 const updatePassword = `-- name: UpdatePassword :exec
-UPDATE "user"
+UPDATE users
 SET password = $2
 WHERE id = $1
 `
@@ -170,7 +170,7 @@ func (q *Queries) UpdatePassword(ctx context.Context, arg UpdatePasswordParams) 
 }
 
 const updateUser = `-- name: UpdateUser :one
-UPDATE "user"
+UPDATE users
 SET
   full_name = coalesce($1, full_name),
   username = coalesce($2, username)

@@ -1,5 +1,5 @@
 -- migrate:up
-CREATE TABLE "user" (
+CREATE TABLE users (
   id SERIAL PRIMARY KEY NOT NULL,
   full_name VARCHAR(70),
   username VARCHAR(16) UNIQUE NOT NULL,
@@ -10,4 +10,4 @@ CREATE TABLE "user" (
 );
 
 -- migrate:down
-DROP TABLE "user";
+DROP TABLE users;
