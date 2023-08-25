@@ -23,11 +23,11 @@ func (u *UserUsecase) Register(
 		ctx,
 		newUser.Username,
 	); err == nil {
-		return nil, err
+		return nil, exception.NewHTTPError(400, "username has been used")
 	}
 
 	if _, err := u.userRepo.FindUserByEmail(ctx, newUser.Email); err == nil {
-		return nil, err
+		return nil, exception.NewHTTPError(400, "email has been used")
 	}
 
 	var errHash error
@@ -76,8 +76,8 @@ func (u *UserUsecase) UpdateUser(
 		return nil, err
 	}
 
-	if data.Username != nil {
-		if _, err := u.userRepo.FindUserByUsername(ctx, *data.Username); err != nil {
+	if data.Username != "" {
+		if _, err := u.userRepo.FindUserByUsername(ctx, data.Username); err != nil {
 			return nil, err
 		}
 	}
