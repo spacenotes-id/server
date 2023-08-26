@@ -13,7 +13,7 @@ import (
 )
 
 type UserRepoPostgres struct {
-	querier sqlc.Querier `di.inject:"sqlcQuerier"`
+	querier sqlc.Querier `di.inject:"querier"`
 }
 
 func (u *UserRepoPostgres) CreateUser(
@@ -21,7 +21,7 @@ func (u *UserRepoPostgres) CreateUser(
 	user *entity.NewUser,
 ) (*entity.CreatedUser, error) {
 	result, err := u.querier.CreateUser(ctx, sqlc.CreateUserParams{
-		FullName: pgtype.Text{String: user.FullName, Valid: true},
+		FullName: pgtype.Text(user.FullName),
 		Username: user.Username,
 		Email:    user.Email,
 		Password: user.Password,
@@ -33,7 +33,7 @@ func (u *UserRepoPostgres) CreateUser(
 
 	return &entity.CreatedUser{
 		ID:        int(result.ID),
-		FullName:  result.FullName.String,
+		FullName:  sql.NullString(result.FullName),
 		Username:  result.Username,
 		Email:     result.Email,
 		CreatedAt: result.CreatedAt.Time,
@@ -116,8 +116,8 @@ func (u *UserRepoPostgres) UpdateUser(
 ) (*entity.UpdatedUser, error) {
 	updatedUser, err := u.querier.UpdateUser(ctx, sqlc.UpdateUserParams{
 		ID:       int32(id),
-		FullName: pgtype.Text{String: data.FullName, Valid: true},
-		Username: pgtype.Text{String: data.Username, Valid: true},
+		FullName: pgtype.Text(data.FullName),
+		Username: pgtype.Text(data.Username),
 	})
 	if err != nil {
 		log.Printf("ERROR(UpdateUser): %v\n", err)
@@ -129,7 +129,7 @@ func (u *UserRepoPostgres) UpdateUser(
 
 	return &entity.UpdatedUser{
 		ID:        int(updatedUser.ID),
-		FullName:  updatedUser.FullName.String,
+		FullName:  sql.NullString(updatedUser.FullName),
 		Username:  updatedUser.Username,
 		Email:     updatedUser.Email,
 		CreatedAt: updatedUser.CreatedAt.Time,
@@ -156,7 +156,7 @@ func (u *UserRepoPostgres) UpdateEmail(
 
 	return &entity.UpdatedUser{
 		ID:        int(updatedUser.ID),
-		FullName:  updatedUser.FullName.String,
+		FullName:  sql.NullString(updatedUser.FullName),
 		Username:  updatedUser.Username,
 		Email:     updatedUser.Email,
 		CreatedAt: updatedUser.CreatedAt.Time,
