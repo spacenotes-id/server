@@ -1,23 +1,52 @@
 package dto
 
-import "github.com/tfkhdyt/SpaceNotes/server/internal/domain/entity"
+import "time"
 
 type (
-	RegisterRequest      = entity.NewUser
-	RegisterResponseData = entity.CreatedUser
-	RegisterResponse     struct {
+	RegisterRequest struct {
+		FullName string `json:"full_name" valid:"stringlength(2|70)~Full name length should be at least 2 - 70 characters"`
+		Username string `json:"username" valid:"required~Username is required,stringlength(3|16)~Username length should be at least 3 - 16 characters"`
+		Email    string `json:"email" valid:"required~Email is required,email~Invalid email"`
+		Password string `json:"password" valid:"required~Password is required"`
+	}
+	RegisterResponseData struct {
+		ID        int       `json:"id"`
+		FullName  string    `json:"full_name"`
+		Username  string    `json:"username"`
+		Email     string    `json:"email"`
+		CreatedAt time.Time `json:"created_at"`
+	}
+	RegisterResponse struct {
 		Message string               `json:"message"`
 		Data    RegisterResponseData `json:"data"`
 	}
 
-	FindUserByIDResponseData = entity.User
-	FindUserByIDResponse     struct {
+	FindUserByIDResponseData struct {
+		ID        int       `json:"id"`
+		FullName  string    `json:"full_name"`
+		Username  string    `json:"username"`
+		Email     string    `json:"email"`
+		Password  string    `json:"password"`
+		CreatedAt time.Time `json:"created_at"`
+		UpdatedAt time.Time `json:"updated_at"`
+	}
+	FindUserByIDResponse struct {
 		Data FindUserByIDResponseData `json:"data"`
 	}
 
-	UpdateUserRequest      = entity.UpdateUser
-	UpdateUserResponseData = entity.UpdatedUser
-	UpdateUserResponse     struct {
+	UpdateUserRequest struct {
+		FullName string `json:"full_name" valid:"stringlength(2|70)~Full name length should be at least 2 - 70 characters"`
+		Username string `json:"username" valid:"stringlength(3|16)~Username length should be at least 3 - 16 characters"`
+	}
+	UpdateUserResponseData struct {
+		ID        int       `json:"id"`
+		FullName  string    `json:"full_name"`
+		Username  string    `json:"username"`
+		Email     string    `json:"email"`
+		CreatedAt time.Time `json:"created_at"`
+		UpdatedAt time.Time `json:"updated_at"`
+	}
+	UpdateUserResponse struct {
 		Message string                 `json:"message"`
 		Data    UpdateUserResponseData `json:"data"`
 	}
