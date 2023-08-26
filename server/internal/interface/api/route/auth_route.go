@@ -11,4 +11,5 @@ type AuthRoute struct {
 
 func (a *AuthRoute) RegisterRoute(r fiber.Router) {
 	r.Post("/register", a.authController.Register)
+	r.Post("/login", a.authController.Login)
 }
