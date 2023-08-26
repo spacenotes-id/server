@@ -41,12 +41,24 @@ func InitDi() {
 			beanType: reflect.TypeOf((*postgresRepo.UserRepoPostgres)(nil)),
 		},
 		bean{
+			beanID:   "refreshTokenRepo",
+			beanType: reflect.TypeOf((*postgresRepo.RefreshTokenRepoPostgres)(nil)),
+		},
+		bean{
 			beanID:   "hashingService",
 			beanType: reflect.TypeOf((*security.BcryptService)(nil)),
 		},
 		bean{
+			beanID:   "authTokenService",
+			beanType: reflect.TypeOf((*security.JwtService)(nil)),
+		},
+		bean{
 			beanID:   "userUsecase",
 			beanType: reflect.TypeOf((*usecase.UserUsecase)(nil)),
+		},
+		bean{
+			beanID:   "authUsecase",
+			beanType: reflect.TypeOf((*usecase.AuthUsecase)(nil)),
 		},
 		bean{
 			beanID:   "authController",
@@ -67,11 +79,11 @@ func InitDi() {
 	)
 
 	if _, err := di.RegisterBeanInstance(
-		"sqlcQuerier",
+		"querier",
 		postgres.GetPostgresSQLCQuerier(context.Background()),
 	); err != nil {
 		log.Fatalf(
-			"ERROR(sqlcQuerier): %v. %v",
+			"ERROR(querier): %v. %v",
 			"Failed to register sqlc querier",
 			err,
 		)
