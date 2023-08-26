@@ -9,8 +9,11 @@ import (
 )
 
 type Querier interface {
+	AddToken(ctx context.Context, token string) (string, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (CreateUserRow, error)
+	DeleteToken(ctx context.Context, token string) error
 	DeleteUser(ctx context.Context, id int32) error
+	FindToken(ctx context.Context, token string) (string, error)
 	FindUserByEmail(ctx context.Context, email string) (User, error)
 	FindUserByID(ctx context.Context, id int32) (User, error)
 	FindUserByUsername(ctx context.Context, username string) (User, error)
