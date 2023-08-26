@@ -4,49 +4,16 @@ import (
 	"context"
 
 	"github.com/tfkhdyt/SpaceNotes/server/internal/application/dto"
+	"github.com/tfkhdyt/SpaceNotes/server/internal/domain/entity"
 	"github.com/tfkhdyt/SpaceNotes/server/internal/domain/repository"
 	"github.com/tfkhdyt/SpaceNotes/server/internal/domain/service"
 	"github.com/tfkhdyt/SpaceNotes/server/pkg/exception"
+	"github.com/tfkhdyt/SpaceNotes/server/pkg/sql"
 )
 
 type UserUsecase struct {
 	userRepo       repository.UserRepo    `di.inject:"userRepo"`
 	hashingService service.HashingService `di.inject:"hashingService"`
-}
-
-func (u *UserUsecase) Register(
-	newUser *dto.RegisterRequest,
-) (*dto.RegisterResponse, error) {
-	ctx := context.Background()
-
-	if _, err := u.userRepo.FindUserByUsername(
-		ctx,
-		newUser.Username,
-	); err == nil {
-		return nil, exception.NewHTTPError(400, "username has been used")
-	}
-
-	if _, err := u.userRepo.FindUserByEmail(ctx, newUser.Email); err == nil {
-		return nil, exception.NewHTTPError(400, "email has been used")
-	}
-
-	var errHash error
-	newUser.Password, errHash = u.hashingService.HashPassword(newUser.Password)
-	if errHash != nil {
-		return nil, errHash
-	}
-
-	registeredUser, errRegister := u.userRepo.CreateUser(ctx, newUser)
-	if errRegister != nil {
-		return nil, errRegister
-	}
-
-	response := &dto.RegisterResponse{
-		Message: "Your account has been created successfully",
-		Data:    *registeredUser,
-	}
-
-	return response, nil
 }
 
 func (u *UserUsecase) FindUserByID(
@@ -60,7 +27,15 @@ func (u *UserUsecase) FindUserByID(
 	}
 
 	response := &dto.FindUserByIDResponse{
-		Data: *user,
+		Data: dto.FindUserByIDResponseData{
+			ID:        user.ID,
+			FullName:  user.FullName.String,
+			Username:  user.Username,
+			Email:     user.Email,
+			Password:  user.Password,
+			CreatedAt: user.CreatedAt,
+			UpdatedAt: user.UpdatedAt,
+		},
 	}
 
 	return response, nil
@@ -82,14 +57,24 @@ func (u *UserUsecase) UpdateUser(
 		}
 	}
 
-	updatedUser, err := u.userRepo.UpdateUser(ctx, id, data)
+	updatedUser, err := u.userRepo.UpdateUser(ctx, id, &entity.UpdateUser{
+		FullName: sql.NewNullString(data.FullName),
+		Username: sql.NewNullString(data.Username),
+	})
 	if err != nil {
 		return nil, err
 	}
 
 	response := &dto.UpdateUserResponse{
 		Message: "Your account data has been updated successfully ",
-		Data:    *updatedUser,
+		Data: dto.UpdateUserResponseData{
+			ID:        updatedUser.ID,
+			FullName:  updatedUser.FullName.String,
+			Username:  updatedUser.Username,
+			Email:     updatedUser.Email,
+			CreatedAt: updatedUser.CreatedAt,
+			UpdatedAt: updatedUser.UpdatedAt,
+		},
 	}
 
 	return response, nil
@@ -123,8 +108,15 @@ func (u *UserUsecase) UpdateEmail(
 	}
 
 	response := &dto.UpdateUserResponse{
-		Message: "Your email has been updated successfully ",
-		Data:    *updatedUser,
+		Message: "Your account data has been updated successfully ",
+		Data: dto.UpdateUserResponseData{
+			ID:        updatedUser.ID,
+			FullName:  updatedUser.FullName.String,
+			Username:  updatedUser.Username,
+			Email:     updatedUser.Email,
+			CreatedAt: updatedUser.CreatedAt,
+			UpdatedAt: updatedUser.UpdatedAt,
+		},
 	}
 
 	return response, nil
