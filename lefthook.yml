@@ -2,16 +2,15 @@ pre-commit:
   parallel: true
   commands:
     backend-lint:
-      root: "./server/"
+      root: "server/"
       glob: "*.go"
       run: golangci-lint run
     backend-format:
-      root: "./server/"
+      root: "server/"
       glob: "*.go"
       run: gofumpt -w .
 pre-push:
   commands:
     backend-security-check:
-      root: "./server/"
-      glob: "*.go"
+      root: "server/"
       run: gosec -exclude=G101 ./...
