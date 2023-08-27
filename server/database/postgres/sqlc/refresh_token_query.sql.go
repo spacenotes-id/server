@@ -9,14 +9,13 @@ import (
 	"context"
 )
 
-const addToken = `-- name: AddToken :one
-INSERT INTO refresh_tokens (token) VALUES ($1) RETURNING token
+const addToken = `-- name: AddToken :exec
+INSERT INTO refresh_tokens (token) VALUES ($1)
 `
 
-func (q *Queries) AddToken(ctx context.Context, token string) (string, error) {
-	row := q.db.QueryRow(ctx, addToken, token)
-	err := row.Scan(&token)
-	return token, err
+func (q *Queries) AddToken(ctx context.Context, token string) error {
+	_, err := q.db.Exec(ctx, addToken, token)
+	return err
 }
 
 const deleteToken = `-- name: DeleteToken :exec
