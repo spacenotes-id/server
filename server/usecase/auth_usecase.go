@@ -113,12 +113,36 @@ func (a *AuthUsecase) Login(
 		return nil, errRefresh
 	}
 
+	if err := a.refreshTokenRepo.AddToken(ctx, refreshToken); err != nil {
+		return nil, err
+	}
+
 	response := &dto.LoginResponse{
 		Message: "You've logged in successfully",
 		Data: dto.LoginResponseData{
 			AccessToken:  accessToken,
 			RefreshToken: refreshToken,
 		},
+	}
+
+	return response, nil
+}
+
+func (a *AuthUsecase) Logout(
+	refreshToken string,
+) (*dto.LogoutResponse, error) {
+	ctx := context.Background()
+
+	if _, err := a.refreshTokenRepo.FindToken(ctx, refreshToken); err != nil {
+		return nil, err
+	}
+
+	if err := a.refreshTokenRepo.DeleteToken(ctx, refreshToken); err != nil {
+		return nil, err
+	}
+
+	response := &dto.LogoutResponse{
+		Message: "You've logged out successfully",
 	}
 
 	return response, nil
