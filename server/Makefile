@@ -1,21 +1,21 @@
 all: start
 
 build:
-	GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o ./bin/spacenotes-server ./cmd/spacenotes
+	GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o ./bin/spacenotes-server .
 
 install:
-	go install ./cmd/spacenotes
+	go install .
 
 start: db-start build
 	./bin/spacenotes-server $(ARGS)
 
 dev: db-start
-	go run ./cmd/spacenotes $(ARGS)
+	go run . $(ARGS)
 
 # dependency:
 # - watchexec = https://github.com/watchexec/watchexec
 dev-watch: db-start
-	watchexec -c -r -e go -- go run ./cmd/spacenotes $(ARGS)
+	watchexec -c -r -e go -- go run . $(ARGS)
 
 sqlc-generate:
 	sqlc generate
