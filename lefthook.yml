@@ -1,0 +1,14 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "server/**/*.go"
+      run: golangci-lint run
+    format:
+      glob: "server/**/*.go"
+      run: gofumpt -w .
+pre-push:
+  commands:
+    security:
+      glob: "server/**/*.go"
+      run: gosec -exclude=G101 ./...
