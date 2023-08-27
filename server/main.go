@@ -4,10 +4,10 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/goioc/di"
 	"github.com/tfkhdyt/SpaceNotes/server/container"
@@ -55,5 +55,7 @@ func main() {
 	di.GetInstance("authRoute").(*route.AuthRoute).
 		RegisterRoute(v1.Group("/auth"))
 
-	log.Fatalln(app.Listen(fmt.Sprintf(":%d", *port)))
+	log.Info("Server is running at port ", *port)
+
+	log.Fatal(app.Listen(fmt.Sprintf(":%d", *port)))
 }
