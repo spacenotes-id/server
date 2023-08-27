@@ -67,3 +67,42 @@ func (a *AuthController) Login(c *fiber.Ctx) error {
 
 	return c.Status(201).JSON(result)
 }
+
+func (a *AuthController) Logout(c *fiber.Ctx) error {
+	payload := new(dto.LogoutRequest)
+	if err := c.BodyParser(payload); err != nil {
+		rfrsh := c.Cookies("refreshToken")
+		if rfrsh == "" {
+			return fiber.NewError(fiber.StatusUnauthorized, "Invalid refresh token")
+		}
+
+		payload.RefreshToken = rfrsh
+	}
+
+	if _, err := govalidator.ValidateStruct(payload); err != nil {
+		return exception.NewValidationError(err)
+	}
+
+	response, err := a.authUsecase.Logout(payload.RefreshToken)
+	if err != nil {
+		return err
+	}
+
+	c.Cookie(&fiber.Cookie{
+		Name:     "accessToken",
+		Value:    "deleted",
+		Path:     "/",
+		Expires:  time.Date(2002, time.April, 1, 23, 0, 0, 0, time.UTC),
+		HTTPOnly: true,
+	})
+
+	c.Cookie(&fiber.Cookie{
+		Name:     "refreshToken",
+		Value:    "deleted",
+		Path:     "/",
+		Expires:  time.Date(2002, time.April, 1, 23, 0, 0, 0, time.UTC),
+		HTTPOnly: true,
+	})
+
+	return c.JSON(response)
+}
