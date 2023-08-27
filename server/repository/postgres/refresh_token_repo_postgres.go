@@ -15,15 +15,14 @@ type RefreshTokenRepoPostgres struct {
 func (r *RefreshTokenRepoPostgres) AddToken(
 	ctx context.Context,
 	token string,
-) (string, error) {
-	token, err := r.querier.AddToken(ctx, token)
-	if err != nil {
+) error {
+	if err := r.querier.AddToken(ctx, token); err != nil {
 		log.Error(err)
-		return "", fiber.
+		return fiber.
 			NewError(fiber.StatusInternalServerError, "Failed to add refresh token")
 	}
 
-	return token, nil
+	return nil
 }
 
 func (r *RefreshTokenRepoPostgres) FindToken(
