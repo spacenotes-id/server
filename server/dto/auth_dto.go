@@ -33,4 +33,11 @@ type (
 		Message string            `json:"message"`
 		Data    LoginResponseData `json:"data"`
 	}
+
+	LogoutRequest struct {
+		RefreshToken string `json:"refresh_token" valid:"required~Refresh token is required"`
+	}
+	LogoutResponse struct {
+		Message string `json:"message"`
+	}
 )
