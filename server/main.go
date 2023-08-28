@@ -4,12 +4,16 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/tfkhdyt/SpaceNotes/server/config"
 	"github.com/tfkhdyt/SpaceNotes/server/container"
 	"github.com/tfkhdyt/SpaceNotes/server/helper/exception"
 	"github.com/tfkhdyt/SpaceNotes/server/route"
@@ -17,6 +21,18 @@ import (
 
 func init() {
 	container.InitDi()
+}
+
+func gracefullyShutdown(app *fiber.App, sigChan chan os.Signal) {
+	<-sigChan
+	fmt.Println("Gracefully shutting down...")
+
+	if err := app.Shutdown(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	config.PostgresPool.Close()
 }
 
 func main() {
@@ -55,5 +71,12 @@ func main() {
 
 	log.Info("Server is running at port ", *port)
 
-	log.Fatal(app.Listen(fmt.Sprintf(":%d", *port)))
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+	go gracefullyShutdown(app, sigChan)
+
+	if err := app.Listen(fmt.Sprintf(":%d", *port)); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
