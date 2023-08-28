@@ -35,4 +35,13 @@ type (
 	LogoutResponse struct {
 		Message string `json:"message"`
 	}
+
+	RefreshRequest      = LogoutRequest
+	RefreshResponseData struct {
+		AccessToken string `json:"access_token"`
+	}
+	RefreshResponse struct {
+		Message string              `json:"message"`
+		Data    RefreshResponseData `json:"data"`
+	}
 )
