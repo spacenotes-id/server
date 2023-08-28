@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/tfkhdyt/SpaceNotes/server/database/postgres/sqlc"
 	"github.com/tfkhdyt/SpaceNotes/server/dto"
@@ -17,28 +16,7 @@ type AuthUsecase struct {
 	userRepo         *postgres.UserRepoPostgres         `di.inject:"userRepo"`
 	bcryptService    *service.BcryptService             `di.inject:"bcryptService"`
 	jwtService       *service.JwtService                `di.inject:"jwtService"`
-}
-
-func (a *AuthUsecase) verifyUsernameAvailability(
-	ctx context.Context,
-	username string,
-) error {
-	if _, err := a.userRepo.FindUserByUsername(ctx, username); err == nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Username has been used")
-	}
-
-	return nil
-}
-
-func (a *AuthUsecase) verifyEmailAvailability(
-	ctx context.Context,
-	email string,
-) error {
-	if _, err := a.userRepo.FindUserByEmail(ctx, email); err == nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Email has been used")
-	}
-
-	return nil
+	userUsecase      *UserUsecase                       `di.inject:"userUsecase"`
 }
 
 func (a *AuthUsecase) Register(
@@ -46,11 +24,17 @@ func (a *AuthUsecase) Register(
 ) (*dto.RegisterResponse, error) {
 	ctx := context.Background()
 
-	if err := a.verifyUsernameAvailability(ctx, newUser.Username); err != nil {
+	if err := a.userUsecase.verifyUsernameAvailability(
+		ctx,
+		newUser.Username,
+	); err != nil {
 		return nil, err
 	}
 
-	if err := a.verifyEmailAvailability(ctx, newUser.Email); err != nil {
+	if err := a.userUsecase.verifyEmailAvailability(
+		ctx,
+		newUser.Email,
+	); err != nil {
 		return nil, err
 	}
 
@@ -74,13 +58,7 @@ func (a *AuthUsecase) Register(
 
 	response := &dto.RegisterResponse{
 		Message: "Your account has been created successfully",
-		Data: dto.RegisterResponseData{
-			ID:        int(registeredUser.ID),
-			FullName:  registeredUser.FullName.String,
-			Username:  registeredUser.Username,
-			Email:     registeredUser.Email,
-			CreatedAt: registeredUser.CreatedAt.Time,
-		},
+		Data:    *registeredUser,
 	}
 
 	return response, nil

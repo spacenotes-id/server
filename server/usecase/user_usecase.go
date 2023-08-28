@@ -29,18 +29,35 @@ func (u *UserUsecase) FindUserByID(
 	}
 
 	response := &dto.FindUserByIDResponse{
-		Data: dto.FindUserByIDResponseData{
-			ID:        int(user.ID),
-			FullName:  user.FullName.String,
-			Username:  user.Username,
-			Email:     user.Email,
-			Password:  user.Password,
-			CreatedAt: user.CreatedAt.Time,
-			UpdatedAt: user.UpdatedAt.Time,
-		},
+		Data: *user,
 	}
 
 	return response, nil
+}
+
+func (a *UserUsecase) verifyEmailAvailability(
+	ctx context.Context,
+	email string,
+) error {
+	if _, err := a.userRepo.FindUserByEmail(ctx, email); err == nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Email has been used")
+	}
+
+	return nil
+}
+
+func (u *UserUsecase) verifyUsernameAvailability(
+	ctx context.Context,
+	username string,
+) error {
+	if _, err := u.userRepo.FindUserByUsername(
+		ctx,
+		username,
+	); err == nil {
+		return err
+	}
+
+	return nil
 }
 
 func (u *UserUsecase) UpdateUser(
@@ -54,10 +71,7 @@ func (u *UserUsecase) UpdateUser(
 	}
 
 	if data.Username != "" {
-		if _, err := u.userRepo.FindUserByUsername(
-			ctx,
-			data.Username,
-		); err != nil {
+		if err := u.verifyUsernameAvailability(ctx, data.Username); err != nil {
 			return nil, err
 		}
 	}
@@ -74,14 +88,7 @@ func (u *UserUsecase) UpdateUser(
 
 	response := &dto.UpdateUserResponse{
 		Message: "Your account data has been updated successfully ",
-		Data: dto.UpdateUserResponseData{
-			ID:        int(updatedUser.ID),
-			FullName:  updatedUser.FullName.String,
-			Username:  updatedUser.Username,
-			Email:     updatedUser.Email,
-			CreatedAt: updatedUser.CreatedAt.Time,
-			UpdatedAt: updatedUser.UpdatedAt.Time,
-		},
+		Data:    *updatedUser,
 	}
 
 	return response, nil
@@ -98,7 +105,10 @@ func (u *UserUsecase) UpdateEmail(
 		return nil, err
 	}
 
-	if _, err := u.userRepo.FindUserByEmail(ctx, data.NewEmail); err != nil {
+	if err := u.verifyEmailAvailability(
+		ctx,
+		data.NewEmail,
+	); err != nil {
 		return nil, err
 	}
 
@@ -120,14 +130,7 @@ func (u *UserUsecase) UpdateEmail(
 
 	response := &dto.UpdateUserResponse{
 		Message: "Your account data has been updated successfully ",
-		Data: dto.UpdateUserResponseData{
-			ID:        int(updatedUser.ID),
-			FullName:  updatedUser.FullName.String,
-			Username:  updatedUser.Username,
-			Email:     updatedUser.Email,
-			CreatedAt: updatedUser.CreatedAt.Time,
-			UpdatedAt: updatedUser.UpdatedAt.Time,
-		},
+		Data:    sqlc.UpdateUserRow(*updatedUser),
 	}
 
 	return response, nil
