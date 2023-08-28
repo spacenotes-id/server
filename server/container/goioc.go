@@ -9,7 +9,6 @@ import (
 	"github.com/tfkhdyt/SpaceNotes/server/controller"
 	postgresDB "github.com/tfkhdyt/SpaceNotes/server/database/postgres"
 	"github.com/tfkhdyt/SpaceNotes/server/repository/postgres"
-	"github.com/tfkhdyt/SpaceNotes/server/route"
 	"github.com/tfkhdyt/SpaceNotes/server/service"
 	"github.com/tfkhdyt/SpaceNotes/server/usecase"
 )
@@ -69,14 +68,6 @@ func InitDi() {
 		bean{
 			beanID:   "userController",
 			beanType: reflect.TypeOf((*controller.UserController)(nil)),
-		},
-		bean{
-			beanID:   "authRoute",
-			beanType: reflect.TypeOf((*route.AuthRoute)(nil)),
-		},
-		bean{
-			beanID:   "userRoute",
-			beanType: reflect.TypeOf((*route.UserRoute)(nil)),
 		},
 	)
 
