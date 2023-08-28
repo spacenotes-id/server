@@ -14,9 +14,9 @@ type JwtService struct{}
 
 func (j *JwtService) CreateAccessToken(id int) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"iss":    "spacenotes-server",
-		"userId": id,
-		"exp":    time.Now().Add(15 * time.Minute).Unix(),
+		"iss":     "spacenotes-server",
+		"user_id": id,
+		"exp":     time.Now().Add(15 * time.Minute).Unix(),
 	})
 	if token == nil {
 		return "", fiber.NewError(
@@ -39,9 +39,9 @@ func (j *JwtService) CreateRefreshToken(
 	id int,
 ) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"iss":    "spacenotes-server",
-		"userId": id,
-		"exp":    time.Now().Add(720 * time.Hour).Unix(),
+		"iss":     "spacenotes-server",
+		"user_id": id,
+		"exp":     time.Now().Add(720 * time.Hour).Unix(),
 	})
 	if token == nil {
 		return "", fiber.NewError(
@@ -80,7 +80,7 @@ func (j *JwtService) ParseRefreshToken(tokenString string) (int, error) {
 		return 0, fiber.NewError(fiber.StatusBadRequest, "Invalid token")
 	}
 
-	userId, okUserId := claims["userId"].(float64)
+	userId, okUserId := claims["user_id"].(float64)
 	if !okUserId {
 		return 0, fiber.
 			NewError(fiber.StatusBadRequest, "Failed to parse user id from claims")
