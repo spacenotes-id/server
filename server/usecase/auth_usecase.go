@@ -111,7 +111,7 @@ func (a *AuthUsecase) Logout(
 ) (*dto.LogoutResponse, error) {
 	ctx := context.Background()
 
-	if _, err := a.refreshTokenRepo.FindToken(ctx, refreshToken); err != nil {
+	if err := a.refreshTokenRepo.VerifyToken(ctx, refreshToken); err != nil {
 		return nil, err
 	}
 
@@ -121,6 +121,35 @@ func (a *AuthUsecase) Logout(
 
 	response := &dto.LogoutResponse{
 		Message: "You've logged out successfully",
+	}
+
+	return response, nil
+}
+
+func (a *AuthUsecase) Refresh(
+	refreshToken string,
+) (*dto.RefreshResponse, error) {
+	ctx := context.Background()
+
+	userID, err := a.jwtService.ParseRefreshToken(refreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := a.refreshTokenRepo.VerifyToken(ctx, refreshToken); err != nil {
+		return nil, err
+	}
+
+	accessToken, errAccess := a.jwtService.CreateAccessToken(userID)
+	if errAccess != nil {
+		return nil, errAccess
+	}
+
+	response := &dto.RefreshResponse{
+		Message: "Your access token has been refreshed successfully",
+		Data: dto.RefreshResponseData{
+			AccessToken: accessToken,
+		},
 	}
 
 	return response, nil
