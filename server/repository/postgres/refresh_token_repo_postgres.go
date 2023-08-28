@@ -9,7 +9,7 @@ import (
 )
 
 type RefreshTokenRepoPostgres struct {
-	querier sqlc.Querier `di.inject:"querier"`
+	querier *sqlc.Queries `di.inject:"querier"`
 }
 
 func (r *RefreshTokenRepoPostgres) AddToken(

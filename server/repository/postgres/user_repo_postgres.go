@@ -10,7 +10,7 @@ import (
 )
 
 type UserRepoPostgres struct {
-	querier sqlc.Querier `di.inject:"querier"`
+	querier *sqlc.Queries `di.inject:"querier"`
 }
 
 func (u *UserRepoPostgres) CreateUser(
@@ -24,7 +24,7 @@ func (u *UserRepoPostgres) CreateUser(
 			NewError(fiber.StatusInternalServerError, "Failed to create new user")
 	}
 
-	return &result, nil
+	return result, nil
 }
 
 func (u *UserRepoPostgres) FindUserByID(
@@ -39,7 +39,7 @@ func (u *UserRepoPostgres) FindUserByID(
 		))
 	}
 
-	return &user, nil
+	return user, nil
 }
 
 func (u *UserRepoPostgres) FindUserByUsername(
@@ -54,7 +54,7 @@ func (u *UserRepoPostgres) FindUserByUsername(
 		))
 	}
 
-	return &user, nil
+	return user, nil
 }
 
 func (u *UserRepoPostgres) FindUserByEmail(
@@ -69,7 +69,7 @@ func (u *UserRepoPostgres) FindUserByEmail(
 		))
 	}
 
-	return &user, nil
+	return user, nil
 }
 
 func (u *UserRepoPostgres) UpdateUser(
@@ -85,7 +85,7 @@ func (u *UserRepoPostgres) UpdateUser(
 		))
 	}
 
-	return &updatedUser, nil
+	return updatedUser, nil
 }
 
 func (u *UserRepoPostgres) UpdateEmail(
@@ -101,7 +101,7 @@ func (u *UserRepoPostgres) UpdateEmail(
 		))
 	}
 
-	return &updatedUser, nil
+	return updatedUser, nil
 }
 
 func (u *UserRepoPostgres) UpdatePassword(
