@@ -25,16 +25,15 @@ func (r *RefreshTokenRepoPostgres) AddToken(
 	return nil
 }
 
-func (r *RefreshTokenRepoPostgres) FindToken(
+func (r *RefreshTokenRepoPostgres) VerifyToken(
 	ctx context.Context,
 	token string,
-) (string, error) {
-	token, err := r.querier.FindToken(ctx, token)
-	if err != nil {
-		return "", fiber.NewError(fiber.StatusNotFound, "Token is not found")
+) error {
+	if _, err := r.querier.FindToken(ctx, token); err != nil {
+		return fiber.NewError(fiber.StatusNotFound, "Token is not found")
 	}
 
-	return token, nil
+	return nil
 }
 
 func (r *RefreshTokenRepoPostgres) DeleteToken(
