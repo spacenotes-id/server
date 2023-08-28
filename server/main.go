@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
-	"github.com/goioc/di"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/tfkhdyt/SpaceNotes/server/container"
 	"github.com/tfkhdyt/SpaceNotes/server/helper/exception"
 	"github.com/tfkhdyt/SpaceNotes/server/route"
@@ -42,7 +42,7 @@ func main() {
 			})
 		},
 	})
-	// app.Use(recover.New())
+	app.Use(recover.New())
 	app.Use(pprof.New())
 
 	port := flag.Uint("port", 8080, "server port")
@@ -50,10 +50,8 @@ func main() {
 
 	v1 := app.Group("/v1")
 
-	di.GetInstance("userRoute").(*route.UserRoute).
-		RegisterRoute(v1.Group("/users"))
-	di.GetInstance("authRoute").(*route.AuthRoute).
-		RegisterRoute(v1.Group("/auth"))
+	route.RegisterAuthRoute(v1.Group("/auth"))
+	route.RegisterUserRoute(v1.Group("/users"))
 
 	log.Info("Server is running at port ", *port)
 
