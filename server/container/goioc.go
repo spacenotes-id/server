@@ -1,7 +1,6 @@
 package container
 
 import (
-	"context"
 	"reflect"
 
 	"github.com/gofiber/fiber/v2/log"
@@ -34,8 +33,6 @@ func registerBeans(beans ...bean) {
 }
 
 func InitDi() {
-	ctx := context.Background()
-
 	registerBeans(
 		bean{
 			beanID:   "userRepo",
@@ -71,7 +68,7 @@ func InitDi() {
 		},
 	)
 
-	db, err := postgresDB.GetPostgresSQLCQuerier(ctx)
+	db, err := postgresDB.GetPostgresSQLCQuerier()
 	if err != nil {
 		log.Fatal(err)
 	}
