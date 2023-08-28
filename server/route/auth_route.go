@@ -13,5 +13,6 @@ func RegisterAuthRoute(r fiber.Router) {
 
 	r.Post("/register", authController.Register)
 	r.Post("/login", authController.Login)
+	r.Patch("/refresh", authController.Refresh)
 	r.Delete("/logout", middleware.JwtMiddleware, authController.Logout)
 }
