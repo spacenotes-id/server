@@ -10,7 +10,6 @@ import (
 	"syscall"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/tfkhdyt/SpaceNotes/server/config"
@@ -68,8 +67,6 @@ func main() {
 
 	route.RegisterAuthRoute(v1.Group("/auth"))
 	route.RegisterUserRoute(v1.Group("/users"))
-
-	log.Info("Server is running at port ", *port)
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
