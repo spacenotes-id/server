@@ -67,6 +67,7 @@ func main() {
 
 	route.RegisterAuthRoute(v1.Group("/auth"))
 	route.RegisterUserRoute(v1.Group("/users"))
+	route.RegisterSpaceRoute(v1.Group("/spaces"))
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)

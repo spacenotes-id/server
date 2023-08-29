@@ -43,6 +43,10 @@ func InitDI() {
 			beanType: reflect.TypeOf((*postgres.RefreshTokenRepoPostgres)(nil)),
 		},
 		bean{
+			beanID:   "spaceRepo",
+			beanType: reflect.TypeOf((*postgres.SpaceRepoPostgres)(nil)),
+		},
+		bean{
 			beanID:   "bcryptService",
 			beanType: reflect.TypeOf((*service.BcryptService)(nil)),
 		},
@@ -59,12 +63,20 @@ func InitDI() {
 			beanType: reflect.TypeOf((*usecase.AuthUsecase)(nil)),
 		},
 		bean{
+			beanID:   "spaceUsecase",
+			beanType: reflect.TypeOf((*usecase.SpaceUsecase)(nil)),
+		},
+		bean{
 			beanID:   "authController",
 			beanType: reflect.TypeOf((*controller.AuthController)(nil)),
 		},
 		bean{
 			beanID:   "userController",
 			beanType: reflect.TypeOf((*controller.UserController)(nil)),
+		},
+		bean{
+			beanID:   "spaceController",
+			beanType: reflect.TypeOf((*controller.SpaceController)(nil)),
 		},
 	)
 
