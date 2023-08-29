@@ -12,14 +12,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/tfkhdyt/SpaceNotes/server/config"
 	"github.com/tfkhdyt/SpaceNotes/server/container"
+	"github.com/tfkhdyt/SpaceNotes/server/database/postgres"
 	"github.com/tfkhdyt/SpaceNotes/server/helper/exception"
 	"github.com/tfkhdyt/SpaceNotes/server/route"
 )
 
 func init() {
-	container.InitDi()
+	container.InitDI()
 }
 
 func gracefullyShutdown(app *fiber.App, sigChan chan os.Signal) {
@@ -31,7 +31,7 @@ func gracefullyShutdown(app *fiber.App, sigChan chan os.Signal) {
 		os.Exit(1)
 	}
 
-	config.PostgresPool.Close()
+	postgres.Pool.Close()
 }
 
 func main() {

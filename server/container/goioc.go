@@ -32,7 +32,7 @@ func registerBeans(beans ...bean) {
 	}
 }
 
-func InitDi() {
+func InitDI() {
 	registerBeans(
 		bean{
 			beanID:   "userRepo",
