@@ -1,0 +1,14 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "./database/postgres/query/"
+    schema: "./database/postgres/migration/"
+    gen:
+      go:
+        sql_package: "pgx/v5"
+        out: "./database/postgres/sqlc/"
+        emit_empty_slices: true
+        omit_unused_structs: true
+        emit_json_tags: true
+        json_tags_case_style: snake
+        emit_result_struct_pointers: true
