@@ -54,3 +54,18 @@ func (s *SpaceRepoPostgres) FindAllSpacesByUserID(
 
 	return spaces, nil
 }
+
+func (s *SpaceRepoPostgres) FindSpaceByID(
+	ctx context.Context,
+	spaceID int,
+) (*sqlc.Space, error) {
+	space, err := s.querier.FindSpaceByID(ctx, int32(spaceID))
+	if err != nil {
+		return nil, fiber.NewError(
+			fiber.StatusNotFound,
+			fmt.Sprintf("Space with id %v is not found", spaceID),
+		)
+	}
+
+	return space, nil
+}
