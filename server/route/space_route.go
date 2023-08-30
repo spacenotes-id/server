@@ -18,4 +18,9 @@ func RegisterSpaceRoute(r fiber.Router) {
 		middleware.JwtMiddleware, middleware.SpaceOwnership,
 		spaceController.FindSpaceByID,
 	)
+	r.Put(
+		"/:space_id",
+		middleware.JwtMiddleware, middleware.SpaceOwnership,
+		spaceController.UpdateSpace,
+	)
 }
