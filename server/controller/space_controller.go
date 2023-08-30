@@ -44,3 +44,17 @@ func (s *SpaceController) FindAllSpacesByUserID(c *fiber.Ctx) error {
 
 	return c.JSON(response)
 }
+
+func (s *SpaceController) FindSpaceByID(c *fiber.Ctx) error {
+	spaceID, err := c.ParamsInt("space_id")
+	if err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Failed to get space id")
+	}
+
+	response, err := s.spaceUsecase.FindSpaceByID(spaceID)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(response)
+}
