@@ -76,3 +76,38 @@ func (s *SpaceUsecase) FindAllSpacesByUserID(
 
 	return response, nil
 }
+
+func (s *SpaceUsecase) FindSpaceByID(
+	spaceID int,
+) (*dto.FindSpaceByIDResponse, error) {
+	ctx := context.Background()
+
+	space, err := s.spaceRepo.FindSpaceByID(ctx, spaceID)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &dto.FindSpaceByIDResponse{
+		Data: *space,
+	}
+
+	return response, nil
+}
+
+func (s SpaceUsecase) VerifySpaceOwnership(userID int, spaceID int) error {
+	ctx := context.Background()
+
+	space, err := s.spaceRepo.FindSpaceByID(ctx, spaceID)
+	if err != nil {
+		return err
+	}
+
+	if space.UserID != int32(userID) {
+		return fiber.NewError(
+			fiber.StatusForbidden,
+			"You're not allowed to access this space",
+		)
+	}
+
+	return nil
+}
