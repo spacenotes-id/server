@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -16,25 +18,10 @@ type SpaceUsecase struct {
 	userRepo  *postgres.UserRepoPostgres  `di.inject:"userRepo"`
 }
 
-func (s *SpaceUsecase) verifyNameAvailability(
-	ctx context.Context,
-	name string,
-) error {
-	if _, err := s.spaceRepo.FindSpaceByName(ctx, name); err == nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Name has been used")
-	}
-
-	return nil
-}
-
 func (s *SpaceUsecase) CreateSpace(userID int, payload *dto.CreateSpaceRequest) (*dto.CreateSpaceResponse, error) {
 	ctx := context.Background()
 
 	if _, err := s.userRepo.FindUserByID(ctx, userID); err != nil {
-		return nil, err
-	}
-
-	if err := s.verifyNameAvailability(ctx, payload.Name); err != nil {
 		return nil, err
 	}
 
@@ -94,7 +81,7 @@ func (s *SpaceUsecase) FindSpaceByID(
 	return response, nil
 }
 
-func (s SpaceUsecase) VerifySpaceOwnership(userID int, spaceID int) error {
+func (s *SpaceUsecase) VerifySpaceOwnership(userID int, spaceID int) error {
 	ctx := context.Background()
 
 	space, err := s.spaceRepo.FindSpaceByID(ctx, spaceID)
@@ -110,4 +97,36 @@ func (s SpaceUsecase) VerifySpaceOwnership(userID int, spaceID int) error {
 	}
 
 	return nil
+}
+
+func (s *SpaceUsecase) UpdateSpace(
+	id int,
+	data *dto.UpdateSpaceRequest,
+) (*dto.UpdateSpaceResponse, error) {
+	ctx := context.Background()
+
+	if _, err := s.spaceRepo.FindSpaceByID(ctx, id); err != nil {
+		return nil, err
+	}
+
+	updatedUser, err := s.spaceRepo.UpdateSpace(ctx, sqlc.UpdateSpaceParams{
+		ID:        int32(id),
+		Name:      pgtype.Text(sql.NewNullString(data.Name)),
+		Emoji:     pgtype.Text(sql.NewNullString(data.Emoji)),
+		IsLocked:  pgtype.Bool(sql.NewNullBool(&data.IsLocked)),
+		UpdatedAt: pgtype.Timestamp{Time: time.Now(), Valid: true},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	response := &dto.UpdateSpaceResponse{
+		Message: fmt.Sprintf(
+			"Space with id %v has been updated successfully",
+			updatedUser.ID,
+		),
+		Data: *updatedUser,
+	}
+
+	return response, nil
 }
