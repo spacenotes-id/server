@@ -13,3 +13,13 @@ func NewNullString(s string) sql.NullString {
 		Valid:  true,
 	}
 }
+
+func NewNullBool(b *bool) sql.NullBool {
+	if b == nil {
+		return sql.NullBool{}
+	}
+	return sql.NullBool{
+		Bool:  *b,
+		Valid: true,
+	}
+}
