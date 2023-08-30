@@ -48,6 +48,7 @@ func (s *SpaceRepoPostgres) FindAllSpacesByUserID(
 ) ([]*sqlc.FindAllSpacesByUserIDRow, error) {
 	spaces, err := s.querier.FindAllSpacesByUserID(ctx, int32(userID))
 	if err != nil {
+		log.Error(err)
 		return nil, fiber.
 			NewError(fiber.StatusInternalServerError, "Failed to get all spaces")
 	}
@@ -68,4 +69,20 @@ func (s *SpaceRepoPostgres) FindSpaceByID(
 	}
 
 	return space, nil
+}
+
+func (s *SpaceRepoPostgres) UpdateSpace(
+	ctx context.Context,
+	data sqlc.UpdateSpaceParams,
+) (*sqlc.UpdateSpaceRow, error) {
+	updatedSpace, err := s.querier.UpdateSpace(ctx, data)
+	if err != nil {
+		log.Error(err)
+		return nil, fiber.NewError(
+			fiber.StatusInternalServerError,
+			fmt.Sprintf("Failed to update space with id %v", data.ID),
+		)
+	}
+
+	return updatedSpace, nil
 }
