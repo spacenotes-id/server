@@ -130,3 +130,21 @@ func (s *SpaceUsecase) UpdateSpace(
 
 	return response, nil
 }
+
+func (s *SpaceUsecase) DeleteSpace(id int) (*dto.DeleteSpaceResponse, error) {
+	ctx := context.Background()
+
+	if _, err := s.spaceRepo.FindSpaceByID(ctx, id); err != nil {
+		return nil, err
+	}
+
+	if err := s.spaceRepo.DeleteSpace(ctx, id); err != nil {
+		return nil, err
+	}
+
+	response := &dto.DeleteSpaceResponse{
+		Message: fmt.Sprintf("Space with id %v has been deleted successfully", id),
+	}
+
+	return response, nil
+}

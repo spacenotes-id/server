@@ -86,3 +86,15 @@ func (s *SpaceRepoPostgres) UpdateSpace(
 
 	return updatedSpace, nil
 }
+
+func (s *SpaceRepoPostgres) DeleteSpace(ctx context.Context, id int) error {
+	if err := s.querier.DeleteSpace(ctx, int32(id)); err != nil {
+		log.Error(err)
+		return fiber.NewError(
+			fiber.StatusInternalServerError,
+			fmt.Sprintf("Failed to delete space with id %v", id),
+		)
+	}
+
+	return nil
+}

@@ -35,4 +35,8 @@ type (
 		Message string              `json:"message"`
 		Data    sqlc.UpdateSpaceRow `json:"data"`
 	}
+
+	DeleteSpaceResponse struct {
+		Message string `json:"message"`
+	}
 )

@@ -83,3 +83,17 @@ func (s *SpaceController) UpdateSpace(c *fiber.Ctx) error {
 
 	return c.JSON(response)
 }
+
+func (s *SpaceController) DeleteSpace(c *fiber.Ctx) error {
+	spaceID, err := space.GetSpaceIDFromParams(c)
+	if err != nil {
+		return err
+	}
+
+	response, errDelete := s.spaceUsecase.DeleteSpace(spaceID)
+	if errDelete != nil {
+		return errDelete
+	}
+
+	return c.JSON(response)
+}
