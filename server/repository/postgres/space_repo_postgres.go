@@ -27,21 +27,6 @@ func (s *SpaceRepoPostgres) CreateSpace(
 	return createdSpace, nil
 }
 
-func (s *SpaceRepoPostgres) FindSpaceByName(
-	ctx context.Context,
-	name string,
-) (*sqlc.Space, error) {
-	space, err := s.querier.FindSpaceByName(ctx, name)
-	if err != nil {
-		return nil, fiber.NewError(
-			fiber.StatusNotFound,
-			fmt.Sprintf("Space with name %s is not found", name),
-		)
-	}
-
-	return space, nil
-}
-
 func (s *SpaceRepoPostgres) FindAllSpacesByUserID(
 	ctx context.Context,
 	userID int,

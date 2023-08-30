@@ -9,9 +9,6 @@ WHERE user_id = $1 ORDER BY id;
 -- name: FindSpaceByID :one
 SELECT * FROM spaces WHERE id = $1;
 
--- name: FindSpaceByName :one
-SELECT * FROM spaces WHERE name = $1;
-
 -- name: UpdateSpace :one
 UPDATE spaces
 SET

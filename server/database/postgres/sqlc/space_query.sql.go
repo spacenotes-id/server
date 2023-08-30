@@ -120,25 +120,6 @@ func (q *Queries) FindSpaceByID(ctx context.Context, id int32) (*Space, error) {
 	return &i, err
 }
 
-const findSpaceByName = `-- name: FindSpaceByName :one
-SELECT id, user_id, name, emoji, is_locked, created_at, updated_at FROM spaces WHERE name = $1
-`
-
-func (q *Queries) FindSpaceByName(ctx context.Context, name string) (*Space, error) {
-	row := q.db.QueryRow(ctx, findSpaceByName, name)
-	var i Space
-	err := row.Scan(
-		&i.ID,
-		&i.UserID,
-		&i.Name,
-		&i.Emoji,
-		&i.IsLocked,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
-	return &i, err
-}
-
 const updateSpace = `-- name: UpdateSpace :one
 UPDATE spaces
 SET
