@@ -139,14 +139,6 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
--- Name: spaces spaces_name_key; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.spaces
-    ADD CONSTRAINT spaces_name_key UNIQUE (name);
-
-
---
 -- Name: spaces spaces_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
