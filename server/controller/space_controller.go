@@ -6,6 +6,7 @@ import (
 	"github.com/tfkhdyt/SpaceNotes/server/dto"
 	"github.com/tfkhdyt/SpaceNotes/server/helper/auth"
 	"github.com/tfkhdyt/SpaceNotes/server/helper/exception"
+	"github.com/tfkhdyt/SpaceNotes/server/helper/space"
 	"github.com/tfkhdyt/SpaceNotes/server/usecase"
 )
 
@@ -46,14 +47,38 @@ func (s *SpaceController) FindAllSpacesByUserID(c *fiber.Ctx) error {
 }
 
 func (s *SpaceController) FindSpaceByID(c *fiber.Ctx) error {
-	spaceID, err := c.ParamsInt("space_id")
-	if err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "Failed to get space id")
-	}
-
-	response, err := s.spaceUsecase.FindSpaceByID(spaceID)
+	spaceID, err := space.GetSpaceIDFromParams(c)
 	if err != nil {
 		return err
+	}
+
+	response, errFind := s.spaceUsecase.FindSpaceByID(spaceID)
+	if errFind != nil {
+		return errFind
+	}
+
+	return c.JSON(response)
+}
+
+func (s *SpaceController) UpdateSpace(c *fiber.Ctx) error {
+	spaceID, err := space.GetSpaceIDFromParams(c)
+	if err != nil {
+		return err
+	}
+
+	payload := new(dto.UpdateSpaceRequest)
+	if err := c.BodyParser(payload); err != nil {
+		return fiber.
+			NewError(fiber.StatusUnprocessableEntity, "Failed to parse body")
+	}
+
+	if _, err := govalidator.ValidateStruct(payload); err != nil {
+		return exception.NewValidationError(err)
+	}
+
+	response, errUpdate := s.spaceUsecase.UpdateSpace(spaceID, payload)
+	if errUpdate != nil {
+		return errUpdate
 	}
 
 	return c.JSON(response)
