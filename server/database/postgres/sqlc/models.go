@@ -8,6 +8,16 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type Space struct {
+	ID        int32            `json:"id"`
+	UserID    int32            `json:"user_id"`
+	Name      string           `json:"name"`
+	Emoji     pgtype.Text      `json:"emoji"`
+	IsLocked  bool             `json:"is_locked"`
+	CreatedAt pgtype.Timestamp `json:"created_at"`
+	UpdatedAt pgtype.Timestamp `json:"updated_at"`
+}
+
 type User struct {
 	ID        int32            `json:"id"`
 	FullName  pgtype.Text      `json:"full_name"`

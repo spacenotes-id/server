@@ -1,0 +1,17 @@
+-- migrate:up
+CREATE TABLE spaces (
+  id SERIAL PRIMARY KEY NOT NULL,
+  user_id INT NOT NULL,
+
+  name VARCHAR(50) NOT NULL,
+  emoji VARCHAR(14),
+  is_locked BOOL NOT NULL DEFAULT false,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  CONSTRAINT fk_space_user FOREIGN KEY(user_id) REFERENCES users(id)
+    ON DELETE CASCADE
+);
+
+-- migrate:down
+DROP TABLE spaces;
