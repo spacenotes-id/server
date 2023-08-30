@@ -7,7 +7,7 @@ SELECT id, name, emoji, is_locked, created_at, updated_at FROM spaces
 WHERE user_id = $1;
 
 -- name: FindSpaceByID :one
-SELECT * FROM spaces WHERE user_id = $1 AND id = $2;
+SELECT * FROM spaces WHERE id = $1;
 
 -- name: FindSpaceByName :one
 SELECT * FROM spaces WHERE name = $1;
@@ -19,8 +19,8 @@ SET
   emoji = COALESCE(sqlc.narg('emoji'), emoji),
   is_locked = COALESCE(sqlc.narg('is_locked'), is_locked),
   updated_at = sqlc.arg('updated_at')
-WHERE user_id = $1 AND id = $2 
+WHERE id = $1
 RETURNING id, name, emoji, is_locked, created_at, updated_at;
 
 -- name: DeleteSpace :exec
-DELETE FROM spaces WHERE user_id = $1 AND id = $2;
+DELETE FROM spaces WHERE id = $1;

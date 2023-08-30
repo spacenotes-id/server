@@ -52,16 +52,11 @@ func (q *Queries) CreateSpace(ctx context.Context, arg CreateSpaceParams) (*Crea
 }
 
 const deleteSpace = `-- name: DeleteSpace :exec
-DELETE FROM spaces WHERE user_id = $1 AND id = $2
+DELETE FROM spaces WHERE id = $1
 `
 
-type DeleteSpaceParams struct {
-	UserID int32 `json:"user_id"`
-	ID     int32 `json:"id"`
-}
-
-func (q *Queries) DeleteSpace(ctx context.Context, arg DeleteSpaceParams) error {
-	_, err := q.db.Exec(ctx, deleteSpace, arg.UserID, arg.ID)
+func (q *Queries) DeleteSpace(ctx context.Context, id int32) error {
+	_, err := q.db.Exec(ctx, deleteSpace, id)
 	return err
 }
 
@@ -107,16 +102,11 @@ func (q *Queries) FindAllSpacesByUserID(ctx context.Context, userID int32) ([]*F
 }
 
 const findSpaceByID = `-- name: FindSpaceByID :one
-SELECT id, user_id, name, emoji, is_locked, created_at, updated_at FROM spaces WHERE user_id = $1 AND id = $2
+SELECT id, user_id, name, emoji, is_locked, created_at, updated_at FROM spaces WHERE id = $1
 `
 
-type FindSpaceByIDParams struct {
-	UserID int32 `json:"user_id"`
-	ID     int32 `json:"id"`
-}
-
-func (q *Queries) FindSpaceByID(ctx context.Context, arg FindSpaceByIDParams) (*Space, error) {
-	row := q.db.QueryRow(ctx, findSpaceByID, arg.UserID, arg.ID)
+func (q *Queries) FindSpaceByID(ctx context.Context, id int32) (*Space, error) {
+	row := q.db.QueryRow(ctx, findSpaceByID, id)
 	var i Space
 	err := row.Scan(
 		&i.ID,
@@ -152,16 +142,15 @@ func (q *Queries) FindSpaceByName(ctx context.Context, name string) (*Space, err
 const updateSpace = `-- name: UpdateSpace :one
 UPDATE spaces
 SET
-  name = COALESCE($3, name),
-  emoji = COALESCE($4, emoji),
-  is_locked = COALESCE($5, is_locked),
-  updated_at = $6
-WHERE user_id = $1 AND id = $2 
+  name = COALESCE($2, name),
+  emoji = COALESCE($3, emoji),
+  is_locked = COALESCE($4, is_locked),
+  updated_at = $5
+WHERE id = $1
 RETURNING id, name, emoji, is_locked, created_at, updated_at
 `
 
 type UpdateSpaceParams struct {
-	UserID    int32            `json:"user_id"`
 	ID        int32            `json:"id"`
 	Name      pgtype.Text      `json:"name"`
 	Emoji     pgtype.Text      `json:"emoji"`
@@ -180,7 +169,6 @@ type UpdateSpaceRow struct {
 
 func (q *Queries) UpdateSpace(ctx context.Context, arg UpdateSpaceParams) (*UpdateSpaceRow, error) {
 	row := q.db.QueryRow(ctx, updateSpace,
-		arg.UserID,
 		arg.ID,
 		arg.Name,
 		arg.Emoji,

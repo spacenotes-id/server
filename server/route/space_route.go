@@ -12,4 +12,5 @@ func RegisterSpaceRoute(r fiber.Router) {
 		GetInstance("spaceController").(*controller.SpaceController)
 
 	r.Post("/", middleware.JwtMiddleware, spaceController.CreateSpace)
+	r.Get("/", middleware.JwtMiddleware, spaceController.FindAllSpacesByUserID)
 }

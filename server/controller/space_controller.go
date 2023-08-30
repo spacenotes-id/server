@@ -33,3 +33,14 @@ func (s *SpaceController) CreateSpace(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusCreated).JSON(response)
 }
+
+func (s *SpaceController) FindAllSpacesByUserID(c *fiber.Ctx) error {
+	userID := auth.GetUserIDFromClaims(c)
+
+	response, err := s.spaceUsecase.FindAllSpacesByUserID(userID)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(response)
+}

@@ -12,4 +12,8 @@ type (
 		Message string              `json:"message"`
 		Data    sqlc.CreateSpaceRow `json:"data"`
 	}
+
+	FindAllSpacesByUserIDResponse struct {
+		Data []*sqlc.FindAllSpacesByUserIDRow `json:"data"`
+	}
 )

@@ -55,3 +55,24 @@ func (s *SpaceUsecase) CreateSpace(userID int, payload *dto.CreateSpaceRequest) 
 
 	return response, nil
 }
+
+func (s *SpaceUsecase) FindAllSpacesByUserID(
+	userID int,
+) (*dto.FindAllSpacesByUserIDResponse, error) {
+	ctx := context.Background()
+
+	if _, err := s.userRepo.FindUserByID(ctx, userID); err != nil {
+		return nil, err
+	}
+
+	spaces, err := s.spaceRepo.FindAllSpacesByUserID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &dto.FindAllSpacesByUserIDResponse{
+		Data: spaces,
+	}
+
+	return response, nil
+}
