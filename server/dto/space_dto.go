@@ -16,4 +16,8 @@ type (
 	FindAllSpacesByUserIDResponse struct {
 		Data []*sqlc.FindAllSpacesByUserIDRow `json:"data"`
 	}
+
+	FindSpaceByIDResponse struct {
+		Data sqlc.Space `json:"data"`
+	}
 )
