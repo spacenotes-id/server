@@ -1,4 +1,5 @@
 -- migrate:up
+CREATE TYPE status AS ENUM ('normal', 'favorite', 'archived', 'trashed');
 CREATE TABLE notes (
   id SERIAL PRIMARY KEY NOT NULL,
   user_id INT NOT NULL,
@@ -6,9 +7,7 @@ CREATE TABLE notes (
 
   title VARCHAR(50) NOT NULL,
   body TEXT,
-  is_trashed BOOLEAN DEFAULT false,
-  is_favorite BOOLEAN DEFAULT false,
-  is_archived BOOLEAN DEFAULT false,
+  status status DEFAULT 'normal'::status,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 

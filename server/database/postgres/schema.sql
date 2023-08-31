@@ -16,6 +16,18 @@ SET row_security = off;
 -- *not* creating schema, since initdb creates it
 
 
+--
+-- Name: status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.status AS ENUM (
+    'normal',
+    'favorite',
+    'archived',
+    'trashed'
+);
+
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -30,9 +42,7 @@ CREATE TABLE public.notes (
     space_id integer NOT NULL,
     title character varying(50) NOT NULL,
     body text,
-    is_trashed boolean DEFAULT false,
-    is_favorite boolean DEFAULT false,
-    is_archived boolean DEFAULT false,
+    status public.status DEFAULT 'normal'::public.status,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
