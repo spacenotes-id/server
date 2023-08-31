@@ -12,3 +12,6 @@ pre-push:
     backend-security-check:
       root: "server/"
       run: gosec -exclude=G101 ./...
+    backend-outdated-deps:
+      root: "server/"
+      run: test (go list -u -m -f '{{if .Update}}{{.}}{{end}}' all | wc -l) -eq 0
