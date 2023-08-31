@@ -134,8 +134,16 @@ func (s *SpaceUsecase) UpdateSpace(
 func (s *SpaceUsecase) DeleteSpace(id int) (*dto.DeleteSpaceResponse, error) {
 	ctx := context.Background()
 
-	if _, err := s.spaceRepo.FindSpaceByID(ctx, id); err != nil {
+	space, err := s.spaceRepo.FindSpaceByID(ctx, id)
+	if err != nil {
 		return nil, err
+	}
+
+	if space.IsLocked {
+		return nil, fiber.NewError(
+			fiber.StatusBadRequest,
+			"This space cannot be deleted because it's locked",
+		)
 	}
 
 	if err := s.spaceRepo.DeleteSpace(ctx, id); err != nil {
