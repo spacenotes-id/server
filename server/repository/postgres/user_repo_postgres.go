@@ -6,6 +6,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
+	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/tfkhdyt/SpaceNotes/server/database/postgres"
 	"github.com/tfkhdyt/SpaceNotes/server/database/postgres/sqlc"
 )
 
@@ -17,11 +19,43 @@ func (u *UserRepoPostgres) CreateUser(
 	ctx context.Context,
 	newUser sqlc.CreateUserParams,
 ) (*sqlc.CreateUserRow, error) {
-	result, err := u.querier.CreateUser(ctx, newUser)
+	tx, err := postgres.Pool.Begin(ctx)
+	if err != nil {
+		log.Error(err)
+		return nil, fiber.
+			NewError(fiber.StatusInternalServerError, "Failed to start transaction")
+	}
+	// defer tx.Rollback(ctx)
+	defer func() {
+		_ = tx.Rollback(ctx)
+	}()
+
+	qtx := u.querier.WithTx(tx)
+
+	result, err := qtx.CreateUser(ctx, newUser)
 	if err != nil {
 		log.Error(err)
 		return nil, fiber.
 			NewError(fiber.StatusInternalServerError, "Failed to create new user")
+	}
+
+	if _, errSpace := qtx.CreateSpace(ctx, sqlc.CreateSpaceParams{
+		Name:     "General",
+		Emoji:    pgtype.Text{String: "1F3E2", Valid: true},
+		IsLocked: true,
+		UserID:   result.ID,
+	}); errSpace != nil {
+		log.Error(err)
+		return nil, fiber.NewError(
+			fiber.StatusInternalServerError,
+			"Failed to create general space",
+		)
+	}
+
+	if err := tx.Commit(ctx); err != nil {
+		log.Error(err)
+		return nil, fiber.
+			NewError(fiber.StatusInternalServerError, "Failed to commit transaction")
 	}
 
 	return result, nil
