@@ -21,6 +21,44 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: notes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.notes (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    space_id integer NOT NULL,
+    title character varying(50) NOT NULL,
+    body text,
+    is_trashed boolean DEFAULT false,
+    is_favorite boolean DEFAULT false,
+    is_archived boolean DEFAULT false,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+--
+-- Name: notes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.notes_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: notes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.notes_id_seq OWNED BY public.notes.id;
+
+
+--
 -- Name: refresh_tokens; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -109,6 +147,13 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: notes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notes ALTER COLUMN id SET DEFAULT nextval('public.notes_id_seq'::regclass);
+
+
+--
 -- Name: spaces id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -120,6 +165,14 @@ ALTER TABLE ONLY public.spaces ALTER COLUMN id SET DEFAULT nextval('public.space
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: notes notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notes
+    ADD CONSTRAINT notes_pkey PRIMARY KEY (id);
 
 
 --
@@ -171,6 +224,22 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: notes fk_note_space; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notes
+    ADD CONSTRAINT fk_note_space FOREIGN KEY (space_id) REFERENCES public.spaces(id) ON DELETE CASCADE;
+
+
+--
+-- Name: notes fk_note_user; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.notes
+    ADD CONSTRAINT fk_note_user FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
 -- Name: spaces fk_space_user; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -190,4 +259,5 @@ ALTER TABLE ONLY public.spaces
 INSERT INTO public.schema_migrations (version) VALUES
     ('20230823003414'),
     ('20230825234200'),
-    ('20230829004556');
+    ('20230829004556'),
+    ('20230831005536');
