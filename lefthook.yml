@@ -8,6 +8,7 @@ pre-commit:
       root: "server/"
       run: gofumpt -w .
 pre-push:
+  parallel: true
   commands:
     backend-security-check:
       root: "server/"
