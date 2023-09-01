@@ -61,7 +61,7 @@ type Note struct {
 	SpaceID   int32            `json:"space_id"`
 	Title     string           `json:"title"`
 	Body      pgtype.Text      `json:"body"`
-	Status    NullStatus       `json:"status"`
+	Status    Status           `json:"status"`
 	CreatedAt pgtype.Timestamp `json:"created_at"`
 	UpdatedAt pgtype.Timestamp `json:"updated_at"`
 }

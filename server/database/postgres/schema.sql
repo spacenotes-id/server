@@ -42,9 +42,9 @@ CREATE TABLE public.notes (
     space_id integer NOT NULL,
     title character varying(50) NOT NULL,
     body text,
-    status public.status DEFAULT 'normal'::public.status,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+    status public.status DEFAULT 'normal'::public.status NOT NULL,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 

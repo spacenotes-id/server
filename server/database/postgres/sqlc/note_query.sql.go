@@ -16,7 +16,7 @@ INSERT INTO notes (
   user_id, space_id, title, body
 ) VALUES (
   $1, $2, $3, $4
-) RETURNING id, user_id, space_id, title, body, created_at
+) RETURNING id, user_id, space_id, title, body, status, created_at
 `
 
 type CreateNoteParams struct {
@@ -32,6 +32,7 @@ type CreateNoteRow struct {
 	SpaceID   int32            `json:"space_id"`
 	Title     string           `json:"title"`
 	Body      pgtype.Text      `json:"body"`
+	Status    Status           `json:"status"`
 	CreatedAt pgtype.Timestamp `json:"created_at"`
 }
 
@@ -49,6 +50,7 @@ func (q *Queries) CreateNote(ctx context.Context, arg CreateNoteParams) (*Create
 		&i.SpaceID,
 		&i.Title,
 		&i.Body,
+		&i.Status,
 		&i.CreatedAt,
 	)
 	return &i, err
@@ -158,7 +160,7 @@ type FindAllNotesRow struct {
 	SpaceID   int32            `json:"space_id"`
 	Title     string           `json:"title"`
 	Body      pgtype.Text      `json:"body"`
-	Status    NullStatus       `json:"status"`
+	Status    Status           `json:"status"`
 	CreatedAt pgtype.Timestamp `json:"created_at"`
 	UpdatedAt pgtype.Timestamp `json:"updated_at"`
 }
@@ -201,7 +203,7 @@ type FindAllNotesBySpaceIDRow struct {
 	ID        int32            `json:"id"`
 	Title     string           `json:"title"`
 	Body      pgtype.Text      `json:"body"`
-	Status    NullStatus       `json:"status"`
+	Status    Status           `json:"status"`
 	CreatedAt pgtype.Timestamp `json:"created_at"`
 	UpdatedAt pgtype.Timestamp `json:"updated_at"`
 }
@@ -319,7 +321,7 @@ type UpdateNoteRow struct {
 	SpaceID   int32            `json:"space_id"`
 	Title     string           `json:"title"`
 	Body      pgtype.Text      `json:"body"`
-	Status    NullStatus       `json:"status"`
+	Status    Status           `json:"status"`
 	CreatedAt pgtype.Timestamp `json:"created_at"`
 	UpdatedAt pgtype.Timestamp `json:"updated_at"`
 }
