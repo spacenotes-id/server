@@ -129,7 +129,7 @@ func (u *UserUsecase) UpdateEmail(
 	}
 
 	response := &dto.UpdateUserResponse{
-		Message: "Your account data has been updated successfully ",
+		Message: "Your email has been updated successfully ",
 		Data:    sqlc.UpdateUserRow(*updatedUser),
 	}
 

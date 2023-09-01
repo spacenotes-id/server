@@ -45,3 +45,20 @@ func (n *NoteUsecase) CreateNote(
 
 	return response, nil
 }
+
+func (n *NoteUsecase) FindAllNotes(
+	userID int,
+) (*dto.FindAllNotesResponse, error) {
+	ctx := context.Background()
+
+	notes, err := n.noteRepo.FindAllNotes(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &dto.FindAllNotesResponse{
+		Data: notes,
+	}
+
+	return response, nil
+}

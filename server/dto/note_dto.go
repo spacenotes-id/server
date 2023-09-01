@@ -12,4 +12,8 @@ type (
 		Message string             `json:"message"`
 		Data    sqlc.CreateNoteRow `json:"data"`
 	}
+
+	FindAllNotesResponse struct {
+		Data []*sqlc.FindAllNotesRow `json:"data"`
+	}
 )

@@ -27,3 +27,14 @@ func (n *NoteController) CreateNote(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusCreated).JSON(createdNote)
 }
+
+func (n *NoteController) FindAllNotes(c *fiber.Ctx) error {
+	userID := auth.GetUserIDFromClaims(c)
+
+	notes, err := n.noteUsecase.FindAllNotes(userID)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(notes)
+}

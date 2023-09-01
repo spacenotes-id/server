@@ -23,3 +23,16 @@ func (n *NoteRepoPostgres) CreateNote(
 
 	return createdNote, nil
 }
+
+func (n *NoteRepoPostgres) FindAllNotes(
+	ctx context.Context,
+	userID int,
+) ([]*sqlc.FindAllNotesRow, error) {
+	notes, err := n.querier.FindAllNotes(ctx, int32(userID))
+	if err != nil {
+		return nil, fiber.
+			NewError(fiber.StatusInternalServerError, "Failed to find all notes")
+	}
+
+	return notes, nil
+}

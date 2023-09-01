@@ -11,9 +11,6 @@ func RegisterNoteRoute(r fiber.Router) {
 	noteController := di.
 		GetInstance("noteController").(*controller.NoteController)
 
-	r.Post(
-		"/",
-		middleware.JwtMiddleware,
-		noteController.CreateNote,
-	)
+	r.Post("/", middleware.JwtMiddleware, noteController.CreateNote)
+	r.Get("/", middleware.JwtMiddleware, noteController.FindAllNotes)
 }
