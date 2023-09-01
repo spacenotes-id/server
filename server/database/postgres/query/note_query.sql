@@ -3,7 +3,7 @@ INSERT INTO notes (
   user_id, space_id, title, body
 ) VALUES (
   $1, $2, $3, $4
-) RETURNING id, user_id, space_id, title, body, created_at;
+) RETURNING id, user_id, space_id, title, body, status, created_at;
 
 -- name: FindAllNotes :many
 SELECT id, space_id, title, body, status, created_at, updated_at
