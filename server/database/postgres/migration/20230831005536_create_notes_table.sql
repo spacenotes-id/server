@@ -7,9 +7,9 @@ CREATE TABLE notes (
 
   title VARCHAR(50) NOT NULL,
   body TEXT,
-  status status DEFAULT 'normal'::status,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  status status NOT NULL DEFAULT 'normal'::status,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CONSTRAINT fk_note_user FOREIGN KEY(user_id) REFERENCES users(id) 
     ON DELETE CASCADE,
@@ -18,4 +18,5 @@ CREATE TABLE notes (
 );
 
 -- migrate:down
+DROP TYPE status;
 DROP TABLE notes;
