@@ -1,4 +1,4 @@
-node_modules
-.next
+website/node_modules
+website/.next
 server/.env
 server/bin
