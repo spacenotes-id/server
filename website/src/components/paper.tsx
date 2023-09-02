@@ -1,18 +1,37 @@
-import { tw } from '@/libs/common'
-
+import { cva } from 'class-variance-authority'
+import type { VariantProps } from 'class-variance-authority'
 import type { ReactHTML } from 'react'
-import { createElement } from 'react'
+import { createElement, forwardRef } from 'react'
+import { twMerge } from 'tailwind-merge'
 
-type TAsElement = keyof ReactHTML
+const paper = cva(['border'], {
+  variants: {
+    variants: {
+      base: ['bg-white'],
+      ghost: ['bg-base-50'],
+    },
+  },
+  defaultVariants: {
+    variants: 'base',
+  },
+})
+
+type PaperProps = VariantProps<typeof paper>
 
 export type TProps = {
-  as?: TAsElement
+  as?: keyof ReactHTML
   className?: string
-} & React.ComponentProps<TAsElement>
+} & React.ComponentProps<keyof ReactHTML> &
+  PaperProps
 
-export function Paper(props: TProps) {
-  return createElement(props.as ?? 'div', {
+export const Paper = forwardRef<HTMLElement, TProps>((params, ref) => {
+  const { as: componentTypes, variants, className, ...props } = params
+
+  return createElement(componentTypes ?? 'div', {
     ...props,
-    className: tw('bg-white dark:bg-base-800', 'border dark:border-base-700', props.className),
+    ref,
+    className: twMerge(paper({ variants, className })),
   })
-}
+})
+
+Paper.displayName = 'Paper'

@@ -3,15 +3,17 @@
 import { Button } from '@/components/button'
 import { Paper } from '@/components/paper'
 
-import type { spaceList } from '@/db/space'
+import type { SpaceWithNotes } from '@/db/space'
 import { tw } from '@/libs/common'
+
+import { SidebarSpaceListItemNote } from './ss-list-item.note'
 
 import { Disclosure } from '@headlessui/react'
 import { ChevronDownIcon, FolderIcon } from 'lucide-react'
 
-export function SidebarSpaceListItem(props: (typeof spaceList)[0]) {
+export function SidebarSpaceListItem(props: SpaceWithNotes) {
   return (
-    <Disclosure as={Paper} className='rounded'>
+    <Disclosure as={Paper} variants='ghost' className='rounded'>
       {({ open }) => {
         return (
           <>
@@ -30,11 +32,7 @@ export function SidebarSpaceListItem(props: (typeof spaceList)[0]) {
 
             <Disclosure.Panel as='div' className='flex flex-col space-y-2 px-2 py-1.5'>
               {props.notes.map((note) => {
-                return (
-                  <p className='text-xs' key={note.id}>
-                    {note.name}
-                  </p>
-                )
+                return <SidebarSpaceListItemNote key={note.id} {...note} />
               })}
             </Disclosure.Panel>
           </>

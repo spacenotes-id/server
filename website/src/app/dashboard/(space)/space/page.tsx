@@ -1,15 +1,17 @@
 import { Button } from '@/components/button'
 import { Paper } from '@/components/paper'
+import { Title } from '@/components/title'
 
-import { spaceList } from '@/db/space'
+import { getSpaceList } from '@/db/space'
 
 import { ArchiveIcon, HeartIcon, OrbitIcon, PencilIcon, Trash2Icon } from 'lucide-react'
 
 export default function SpacePage() {
+  const spaceList = getSpaceList()
+
   return (
     <>
-      <p className='font-bold text-2xl lg:text-3xl 2xl:text-4xl'>Manage your space</p>
-      <hr className='my-4' />
+      <Title>Manage Your Space</Title>
 
       <div className='grid gap-3 grid-cols-[repeat(auto-fit,minmax(min(100%,8rem),1fr))]'>
         <Paper className='p-4 rounded'>

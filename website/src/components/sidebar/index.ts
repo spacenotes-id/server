@@ -1,1 +1,1 @@
-export * from './_component'
+export * from './sidebar'

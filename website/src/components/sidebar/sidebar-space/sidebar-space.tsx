@@ -1,5 +1,5 @@
-import { SidebarSpaceList } from './sidebar-space-list'
-import { SidebarSpaceListHeader } from './sidebar-space-list-header'
+import { SidebarSpaceList } from './ss-list'
+import { SidebarSpaceListHeader } from './ss-header'
 
 export function SidebarSpace() {
   return (

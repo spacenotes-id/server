@@ -15,7 +15,7 @@ export function Sidebar() {
         'h-full rounded z-50',
       )}
     >
-      <div className='h-full max-h-full w-full overflow-y-auto pt-14 pb-8 space-y-6'>
+      <div className='h-full max-h-full w-full overflow-y-auto pt-14 pb-8 space-y-6 custom-scrollbar'>
         <SidebarSpace />
       </div>
     </Paper>
