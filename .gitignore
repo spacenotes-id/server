@@ -1,2 +1,4 @@
 node_modules
 .next
+server/.env
+server/bin
