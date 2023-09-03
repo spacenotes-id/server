@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-primary antialiased bg-base-50 dark:bg-base-900;
+  }
+
+  .custom-scrollbar {
+    --scrollbarBG: #cfd8dc;
+    --thumbBG: #90a4ae;
+    scrollbar-width: thin;
+    scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    @apply w-2;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--scrollbarBG);
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply border-2 rounded-md;
+    background-color: var(--thumbBG);
+    border-color: var(--scrollbarBG);
+  }
+}
