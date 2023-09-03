@@ -6,7 +6,7 @@ import (
 	"github.com/spacenotes-id/SpaceNotes/server/helper/exception"
 )
 
-func ValidateBody(c *fiber.Ctx, payload any) error {
+func ValidateBody[T any](c *fiber.Ctx, payload T) error {
 	if err := c.BodyParser(payload); err != nil {
 		return fiber.
 			NewError(fiber.StatusUnprocessableEntity, "Failed to parse body")

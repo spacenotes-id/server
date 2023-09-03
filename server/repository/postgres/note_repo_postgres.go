@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/spacenotes-id/SpaceNotes/server/database/postgres/sqlc"
 )
 
@@ -18,6 +19,7 @@ func (n *NoteRepoPostgres) CreateNote(
 ) (*sqlc.CreateNoteRow, error) {
 	createdNote, err := n.querier.CreateNote(ctx, data)
 	if err != nil {
+		log.Error(err)
 		return nil, fiber.
 			NewError(fiber.StatusInternalServerError, "Failed to create new note")
 	}
@@ -31,6 +33,7 @@ func (n *NoteRepoPostgres) FindAllNotes(
 ) ([]*sqlc.FindAllNotesRow, error) {
 	notes, err := n.querier.FindAllNotes(ctx, int32(userID))
 	if err != nil {
+		log.Error(err)
 		return nil, fiber.
 			NewError(fiber.StatusInternalServerError, "Failed to find all notes")
 	}
@@ -44,6 +47,7 @@ func (n *NoteRepoPostgres) FindAllNotesBySpaceID(
 ) ([]*sqlc.FindAllNotesBySpaceIDRow, error) {
 	notes, err := n.querier.FindAllNotesBySpaceID(ctx, int32(spaceID))
 	if err != nil {
+		log.Error(err)
 		return nil, fiber.
 			NewError(fiber.StatusInternalServerError, "Failed to find all notes")
 	}
@@ -57,6 +61,7 @@ func (n *NoteRepoPostgres) FindAllTrashedNotes(
 ) ([]*sqlc.FindAllTrashedNotesRow, error) {
 	notes, err := n.querier.FindAllTrashedNotes(ctx, int32(userID))
 	if err != nil {
+		log.Error(err)
 		return nil, fiber.NewError(
 			fiber.StatusInternalServerError,
 			"Failed to find all trashed notes",
@@ -72,6 +77,7 @@ func (n *NoteRepoPostgres) FindAllFavoriteNotes(
 ) ([]*sqlc.FindAllFavoriteNotesRow, error) {
 	notes, err := n.querier.FindAllFavoriteNotes(ctx, int32(userID))
 	if err != nil {
+		log.Error(err)
 		return nil, fiber.NewError(
 			fiber.StatusInternalServerError,
 			"Failed to find all favorite notes",
@@ -87,6 +93,7 @@ func (n *NoteRepoPostgres) FindAllArchivedNotes(
 ) ([]*sqlc.FindAllArchivedNotesRow, error) {
 	notes, err := n.querier.FindAllArchivedNotes(ctx, int32(userID))
 	if err != nil {
+		log.Error(err)
 		return nil, fiber.NewError(
 			fiber.StatusInternalServerError,
 			"Failed to find all archived notes",
@@ -109,4 +116,20 @@ func (n *NoteRepoPostgres) FindNoteByID(
 	}
 
 	return note, nil
+}
+
+func (n *NoteRepoPostgres) UpdateNote(
+	ctx context.Context,
+	data sqlc.UpdateNoteParams,
+) (*sqlc.UpdateNoteRow, error) {
+	updatedNote, err := n.querier.UpdateNote(ctx, data)
+	if err != nil {
+		log.Error(err)
+		return nil, fiber.NewError(
+			fiber.StatusInternalServerError,
+			fmt.Sprintf("Failed to to update note with id %v", data.ID),
+		)
+	}
+
+	return updatedNote, nil
 }

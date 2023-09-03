@@ -303,7 +303,8 @@ SET
   title = COALESCE($2, title),
   body = COALESCE($3, body),
   status = COALESCE($4, status),
-  updated_at = $5
+  space_id = COALESCE($5, space_id),
+  updated_at = $6
 WHERE id = $1
 RETURNING id, space_id, title, body, status, created_at, updated_at
 `
@@ -313,6 +314,7 @@ type UpdateNoteParams struct {
 	Title     pgtype.Text      `json:"title"`
 	Body      pgtype.Text      `json:"body"`
 	Status    NullStatus       `json:"status"`
+	SpaceID   pgtype.Int4      `json:"space_id"`
 	UpdatedAt pgtype.Timestamp `json:"updated_at"`
 }
 
@@ -332,6 +334,7 @@ func (q *Queries) UpdateNote(ctx context.Context, arg UpdateNoteParams) (*Update
 		arg.Title,
 		arg.Body,
 		arg.Status,
+		arg.SpaceID,
 		arg.UpdatedAt,
 	)
 	var i UpdateNoteRow

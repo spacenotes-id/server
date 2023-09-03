@@ -39,6 +39,7 @@ SET
   title = COALESCE(sqlc.narg('title'), title),
   body = COALESCE(sqlc.narg('body'), body),
   status = COALESCE(sqlc.narg('status'), status),
+  space_id = COALESCE(sqlc.narg('space_id'), space_id),
   updated_at = sqlc.arg('updated_at')
 WHERE id = $1
 RETURNING id, space_id, title, body, status, created_at, updated_at;

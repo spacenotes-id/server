@@ -29,4 +29,9 @@ func RegisterNoteRoute(r fiber.Router) {
 		middleware.JwtMiddleware, middleware.NoteOwnership,
 		noteController.FindNoteByID,
 	)
+	r.Put(
+		"/:note_id",
+		middleware.JwtMiddleware, middleware.NoteOwnership,
+		noteController.UpdateNote,
+	)
 }

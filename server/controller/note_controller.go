@@ -101,3 +101,23 @@ func (n *NoteController) FindNoteByID(c *fiber.Ctx) error {
 
 	return c.JSON(note)
 }
+
+func (n *NoteController) UpdateNote(c *fiber.Ctx) error {
+	userID := auth.GetUserIDFromClaims(c)
+	noteID, err := note.GetNoteIDFromParams(c)
+	if err != nil {
+		return err
+	}
+
+	payload := new(dto.UpdateNoteRequest)
+	if err := validation.ValidateBody(c, payload); err != nil {
+		return err
+	}
+
+	updatedNote, errUpdate := n.noteUsecase.UpdateNote(userID, noteID, payload)
+	if errUpdate != nil {
+		return errUpdate
+	}
+
+	return c.JSON(updatedNote)
+}

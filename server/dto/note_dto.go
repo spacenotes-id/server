@@ -1,6 +1,10 @@
 package dto
 
-import "github.com/spacenotes-id/SpaceNotes/server/database/postgres/sqlc"
+import (
+	"time"
+
+	"github.com/spacenotes-id/SpaceNotes/server/database/postgres/sqlc"
+)
 
 type (
 	CreateNoteRequest struct {
@@ -35,5 +39,17 @@ type (
 
 	FindNoteByIDResponse struct {
 		Data sqlc.Note `json:"data"`
+	}
+
+	UpdateNoteRequest struct {
+		Title   string `json:"title" valid:"maxstringlength(50)~Note title length should not more than 50 characters"`
+		Body    string `json:"body"`
+		SpaceID int    `json:"space_id"`
+		// Status    string    `json:"status" valid:"in(normal|favorite|archived|trashed)~Invalid status"`
+		UpdatedAt time.Time `json:"updated_at"`
+	}
+	UpdateNoteResponse struct {
+		Message string             `json:"message"`
+		Data    sqlc.UpdateNoteRow `json:"data"`
 	}
 )

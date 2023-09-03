@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -183,6 +184,49 @@ func (n *NoteUsecase) FindNoteByID(id int) (*dto.FindNoteByIDResponse, error) {
 
 	response := &dto.FindNoteByIDResponse{
 		Data: *note,
+	}
+
+	return response, nil
+}
+
+func (n *NoteUsecase) UpdateNote(
+	userID int,
+	noteID int,
+	payload *dto.UpdateNoteRequest,
+) (*dto.UpdateNoteResponse, error) {
+	ctx := context.Background()
+
+	if _, err := n.userRepo.FindUserByID(ctx, userID); err != nil {
+		return nil, err
+	}
+
+	if _, err := n.noteRepo.FindNoteByID(ctx, noteID); err != nil {
+		return nil, err
+	}
+
+	if payload.SpaceID != 0 {
+		if err := n.spaceUsecase.VerifySpaceOwnership(
+			userID,
+			payload.SpaceID,
+		); err != nil {
+			return nil, err
+		}
+	}
+
+	updatedNote, err := n.noteRepo.UpdateNote(ctx, sqlc.UpdateNoteParams{
+		ID:        int32(noteID),
+		Title:     pgtype.Text(sql.NewNullString(payload.Title)),
+		Body:      pgtype.Text(sql.NewNullString(payload.Body)),
+		SpaceID:   pgtype.Int4(sql.NewNullInt(payload.SpaceID)),
+		UpdatedAt: pgtype.Timestamp{Time: time.Now(), Valid: true},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	response := &dto.UpdateNoteResponse{
+		Message: "Your note has been updated successfully",
+		Data:    *updatedNote,
 	}
 
 	return response, nil
