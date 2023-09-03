@@ -24,4 +24,12 @@ type (
 	FindAllTrashedNotesResponse struct {
 		Data []*sqlc.FindAllTrashedNotesRow `json:"data"`
 	}
+
+	FindAllFavoriteNotesResponse struct {
+		Data []*sqlc.FindAllFavoriteNotesRow `json:"data"`
+	}
+
+	FindAllArchivedNotesResponse struct {
+		Data []*sqlc.FindAllArchivedNotesRow `json:"data"`
+	}
 )

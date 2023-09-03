@@ -113,3 +113,45 @@ func (n *NoteUsecase) FindAllTrashedNotes(
 
 	return response, nil
 }
+
+func (n *NoteUsecase) FindAllFavoriteNotes(
+	userID int,
+) (*dto.FindAllFavoriteNotesResponse, error) {
+	ctx := context.Background()
+
+	if _, err := n.userRepo.FindUserByID(ctx, userID); err != nil {
+		return nil, err
+	}
+
+	notes, errFind := n.noteRepo.FindAllFavoriteNotes(ctx, userID)
+	if errFind != nil {
+		return nil, errFind
+	}
+
+	response := &dto.FindAllFavoriteNotesResponse{
+		Data: notes,
+	}
+
+	return response, nil
+}
+
+func (n *NoteUsecase) FindAllArchivedNotes(
+	userID int,
+) (*dto.FindAllArchivedNotesResponse, error) {
+	ctx := context.Background()
+
+	if _, err := n.userRepo.FindUserByID(ctx, userID); err != nil {
+		return nil, err
+	}
+
+	notes, errFind := n.noteRepo.FindAllArchivedNotes(ctx, userID)
+	if errFind != nil {
+		return nil, errFind
+	}
+
+	response := &dto.FindAllArchivedNotesResponse{
+		Data: notes,
+	}
+
+	return response, nil
+}

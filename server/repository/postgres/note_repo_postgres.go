@@ -56,8 +56,40 @@ func (n *NoteRepoPostgres) FindAllTrashedNotes(
 ) ([]*sqlc.FindAllTrashedNotesRow, error) {
 	notes, err := n.querier.FindAllTrashedNotes(ctx, int32(userID))
 	if err != nil {
-		return nil, fiber.
-			NewError(fiber.StatusInternalServerError, "Failed to find all trashed notes")
+		return nil, fiber.NewError(
+			fiber.StatusInternalServerError,
+			"Failed to find all trashed notes",
+		)
+	}
+
+	return notes, nil
+}
+
+func (n *NoteRepoPostgres) FindAllFavoriteNotes(
+	ctx context.Context,
+	userID int,
+) ([]*sqlc.FindAllFavoriteNotesRow, error) {
+	notes, err := n.querier.FindAllFavoriteNotes(ctx, int32(userID))
+	if err != nil {
+		return nil, fiber.NewError(
+			fiber.StatusInternalServerError,
+			"Failed to find all favorite notes",
+		)
+	}
+
+	return notes, nil
+}
+
+func (n *NoteRepoPostgres) FindAllArchivedNotes(
+	ctx context.Context,
+	userID int,
+) ([]*sqlc.FindAllArchivedNotesRow, error) {
+	notes, err := n.querier.FindAllArchivedNotes(ctx, int32(userID))
+	if err != nil {
+		return nil, fiber.NewError(
+			fiber.StatusInternalServerError,
+			"Failed to find all archived notes",
+		)
 	}
 
 	return notes, nil

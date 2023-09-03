@@ -64,3 +64,25 @@ func (n *NoteController) FindAllTrashedNotes(c *fiber.Ctx) error {
 
 	return c.JSON(notes)
 }
+
+func (n *NoteController) FindAllFavoriteNotes(c *fiber.Ctx) error {
+	userID := auth.GetUserIDFromClaims(c)
+
+	notes, err := n.noteUsecase.FindAllFavoriteNotes(userID)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(notes)
+}
+
+func (n *NoteController) FindAllArchivedNotes(c *fiber.Ctx) error {
+	userID := auth.GetUserIDFromClaims(c)
+
+	notes, err := n.noteUsecase.FindAllArchivedNotes(userID)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(notes)
+}
