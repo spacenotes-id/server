@@ -24,4 +24,9 @@ func RegisterNoteRoute(r fiber.Router) {
 		middleware.JwtMiddleware,
 		noteController.FindAllArchivedNotes,
 	)
+	r.Get(
+		"/:note_id",
+		middleware.JwtMiddleware, middleware.NoteOwnership,
+		noteController.FindNoteByID,
+	)
 }

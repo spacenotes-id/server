@@ -32,4 +32,8 @@ type (
 	FindAllArchivedNotesResponse struct {
 		Data []*sqlc.FindAllArchivedNotesRow `json:"data"`
 	}
+
+	FindNoteByIDResponse struct {
+		Data sqlc.Note `json:"data"`
+	}
 )

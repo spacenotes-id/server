@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/spacenotes-id/SpaceNotes/server/dto"
 	"github.com/spacenotes-id/SpaceNotes/server/helper/auth"
+	"github.com/spacenotes-id/SpaceNotes/server/helper/note"
 	"github.com/spacenotes-id/SpaceNotes/server/helper/space"
 	"github.com/spacenotes-id/SpaceNotes/server/helper/validation"
 	"github.com/spacenotes-id/SpaceNotes/server/usecase"
@@ -85,4 +86,18 @@ func (n *NoteController) FindAllArchivedNotes(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(notes)
+}
+
+func (n *NoteController) FindNoteByID(c *fiber.Ctx) error {
+	noteID, err := note.GetNoteIDFromParams(c)
+	if err != nil {
+		return err
+	}
+
+	note, errFind := n.noteUsecase.FindNoteByID(noteID)
+	if errFind != nil {
+		return errFind
+	}
+
+	return c.JSON(note)
 }

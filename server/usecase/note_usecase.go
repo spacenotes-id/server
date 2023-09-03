@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/spacenotes-id/SpaceNotes/server/database/postgres/sqlc"
 	"github.com/spacenotes-id/SpaceNotes/server/dto"
@@ -151,6 +152,37 @@ func (n *NoteUsecase) FindAllArchivedNotes(
 
 	response := &dto.FindAllArchivedNotesResponse{
 		Data: notes,
+	}
+
+	return response, nil
+}
+
+func (n *NoteUsecase) VerifyNoteOwnership(userID int, noteID int) error {
+	ctx := context.Background()
+
+	note, err := n.noteRepo.FindNoteByID(ctx, noteID)
+	if err != nil {
+		return err
+	}
+
+	if note.UserID != int32(userID) {
+		return fiber.
+			NewError(fiber.StatusForbidden, "You're not allowed to access this note")
+	}
+
+	return nil
+}
+
+func (n *NoteUsecase) FindNoteByID(id int) (*dto.FindNoteByIDResponse, error) {
+	ctx := context.Background()
+
+	note, err := n.noteRepo.FindNoteByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &dto.FindNoteByIDResponse{
+		Data: *note,
 	}
 
 	return response, nil

@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/spacenotes-id/SpaceNotes/server/database/postgres/sqlc"
@@ -93,4 +94,19 @@ func (n *NoteRepoPostgres) FindAllArchivedNotes(
 	}
 
 	return notes, nil
+}
+
+func (n *NoteRepoPostgres) FindNoteByID(
+	ctx context.Context,
+	id int,
+) (*sqlc.Note, error) {
+	note, err := n.querier.FindNoteByID(ctx, int32(id))
+	if err != nil {
+		return nil, fiber.NewError(
+			fiber.StatusNotFound,
+			fmt.Sprintf("Note with id %v is not found", id),
+		)
+	}
+
+	return note, nil
 }
