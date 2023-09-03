@@ -36,3 +36,16 @@ func (n *NoteRepoPostgres) FindAllNotes(
 
 	return notes, nil
 }
+
+func (n *NoteRepoPostgres) FindAllNotesBySpaceID(
+	ctx context.Context,
+	spaceID int,
+) ([]*sqlc.FindAllNotesBySpaceIDRow, error) {
+	notes, err := n.querier.FindAllNotesBySpaceID(ctx, int32(spaceID))
+	if err != nil {
+		return nil, fiber.
+			NewError(fiber.StatusInternalServerError, "Failed to find all notes")
+	}
+
+	return notes, nil
+}

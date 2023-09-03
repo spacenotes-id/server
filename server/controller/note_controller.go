@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/tfkhdyt/SpaceNotes/server/dto"
 	"github.com/tfkhdyt/SpaceNotes/server/helper/auth"
+	"github.com/tfkhdyt/SpaceNotes/server/helper/space"
 	"github.com/tfkhdyt/SpaceNotes/server/helper/validation"
 	"github.com/tfkhdyt/SpaceNotes/server/usecase"
 )
@@ -34,6 +35,20 @@ func (n *NoteController) FindAllNotes(c *fiber.Ctx) error {
 	notes, err := n.noteUsecase.FindAllNotes(userID)
 	if err != nil {
 		return err
+	}
+
+	return c.JSON(notes)
+}
+
+func (n *NoteController) FindAllNotesBySpaceID(c *fiber.Ctx) error {
+	spaceID, err := space.GetSpaceIDFromParams(c)
+	if err != nil {
+		return err
+	}
+
+	notes, errFind := n.noteUsecase.FindAllNotesBySpaceID(spaceID)
+	if errFind != nil {
+		return errFind
 	}
 
 	return c.JSON(notes)

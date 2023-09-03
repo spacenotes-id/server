@@ -16,4 +16,8 @@ type (
 	FindAllNotesResponse struct {
 		Data []*sqlc.FindAllNotesRow `json:"data"`
 	}
+
+	FindAllNotesBySpaceIDResponse struct {
+		Data []*sqlc.FindAllNotesBySpaceIDRow `json:"data"`
+	}
 )

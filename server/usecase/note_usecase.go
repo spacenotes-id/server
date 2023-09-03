@@ -13,6 +13,7 @@ import (
 type NoteUsecase struct {
 	noteRepo     *postgres.NoteRepoPostgres `di.inject:"noteRepo"`
 	spaceUsecase *SpaceUsecase              `di.inject:"spaceUsecase"`
+	userRepo     *postgres.UserRepoPostgres `di.inject:"userRepo"`
 }
 
 func (n *NoteUsecase) CreateNote(
@@ -51,12 +52,37 @@ func (n *NoteUsecase) FindAllNotes(
 ) (*dto.FindAllNotesResponse, error) {
 	ctx := context.Background()
 
+	if _, err := n.userRepo.FindUserByID(ctx, userID); err != nil {
+		return nil, err
+	}
+
 	notes, err := n.noteRepo.FindAllNotes(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
 
 	response := &dto.FindAllNotesResponse{
+		Data: notes,
+	}
+
+	return response, nil
+}
+
+func (n *NoteUsecase) FindAllNotesBySpaceID(
+	spaceID int,
+) (*dto.FindAllNotesBySpaceIDResponse, error) {
+	ctx := context.Background()
+
+	if _, err := n.spaceUsecase.FindSpaceByID(spaceID); err != nil {
+		return nil, err
+	}
+
+	notes, err := n.noteRepo.FindAllNotesBySpaceID(ctx, spaceID)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &dto.FindAllNotesBySpaceIDResponse{
 		Data: notes,
 	}
 
