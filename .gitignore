@@ -1,4 +1,2 @@
-website/node_modules
-website/.next
-server/.env
-server/bin
+bin
+.env
