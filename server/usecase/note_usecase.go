@@ -22,6 +22,10 @@ func (n *NoteUsecase) CreateNote(
 ) (*dto.CreateNoteResponse, error) {
 	ctx := context.Background()
 
+	if _, err := n.userRepo.FindUserByID(ctx, userID); err != nil {
+		return nil, err
+	}
+
 	if err := n.spaceUsecase.VerifySpaceOwnership(
 		userID,
 		payload.SpaceID,
@@ -83,6 +87,27 @@ func (n *NoteUsecase) FindAllNotesBySpaceID(
 	}
 
 	response := &dto.FindAllNotesBySpaceIDResponse{
+		Data: notes,
+	}
+
+	return response, nil
+}
+
+func (n *NoteUsecase) FindAllTrashedNotes(
+	userID int,
+) (*dto.FindAllTrashedNotesResponse, error) {
+	ctx := context.Background()
+
+	if _, err := n.userRepo.FindUserByID(ctx, userID); err != nil {
+		return nil, err
+	}
+
+	notes, errFind := n.noteRepo.FindAllTrashedNotes(ctx, userID)
+	if errFind != nil {
+		return nil, errFind
+	}
+
+	response := &dto.FindAllTrashedNotesResponse{
 		Data: notes,
 	}
 

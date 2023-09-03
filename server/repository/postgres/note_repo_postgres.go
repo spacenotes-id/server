@@ -49,3 +49,16 @@ func (n *NoteRepoPostgres) FindAllNotesBySpaceID(
 
 	return notes, nil
 }
+
+func (n *NoteRepoPostgres) FindAllTrashedNotes(
+	ctx context.Context,
+	userID int,
+) ([]*sqlc.FindAllTrashedNotesRow, error) {
+	notes, err := n.querier.FindAllTrashedNotes(ctx, int32(userID))
+	if err != nil {
+		return nil, fiber.
+			NewError(fiber.StatusInternalServerError, "Failed to find all trashed notes")
+	}
+
+	return notes, nil
+}

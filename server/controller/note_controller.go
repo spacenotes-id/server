@@ -53,3 +53,14 @@ func (n *NoteController) FindAllNotesBySpaceID(c *fiber.Ctx) error {
 
 	return c.JSON(notes)
 }
+
+func (n *NoteController) FindAllTrashedNotes(c *fiber.Ctx) error {
+	userID := auth.GetUserIDFromClaims(c)
+
+	notes, err := n.noteUsecase.FindAllTrashedNotes(userID)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(notes)
+}

@@ -20,4 +20,8 @@ type (
 	FindAllNotesBySpaceIDResponse struct {
 		Data []*sqlc.FindAllNotesBySpaceIDRow `json:"data"`
 	}
+
+	FindAllTrashedNotesResponse struct {
+		Data []*sqlc.FindAllTrashedNotesRow `json:"data"`
+	}
 )

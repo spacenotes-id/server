@@ -13,4 +13,5 @@ func RegisterNoteRoute(r fiber.Router) {
 
 	r.Post("/", middleware.JwtMiddleware, noteController.CreateNote)
 	r.Get("/", middleware.JwtMiddleware, noteController.FindAllNotes)
+	r.Get("/trash", middleware.JwtMiddleware, noteController.FindAllTrashedNotes)
 }
