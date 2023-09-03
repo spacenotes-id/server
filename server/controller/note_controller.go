@@ -121,3 +121,17 @@ func (n *NoteController) UpdateNote(c *fiber.Ctx) error {
 
 	return c.JSON(updatedNote)
 }
+
+func (n *NoteController) DeleteNote(c *fiber.Ctx) error {
+	noteID, err := note.GetNoteIDFromParams(c)
+	if err != nil {
+		return err
+	}
+
+	response, errDelete := n.noteUsecase.DeleteNote(noteID)
+	if errDelete != nil {
+		return errDelete
+	}
+
+	return c.JSON(response)
+}

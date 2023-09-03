@@ -133,3 +133,14 @@ func (n *NoteRepoPostgres) UpdateNote(
 
 	return updatedNote, nil
 }
+
+func (n *NoteRepoPostgres) DeleteNote(ctx context.Context, id int) error {
+	if err := n.querier.DeleteNote(ctx, int32(id)); err != nil {
+		return fiber.NewError(
+			fiber.StatusInternalServerError,
+			fmt.Sprintf("Failed to delete note with id %v", id),
+		)
+	}
+
+	return nil
+}

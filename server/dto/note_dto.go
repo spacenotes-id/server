@@ -52,4 +52,8 @@ type (
 		Message string             `json:"message"`
 		Data    sqlc.UpdateNoteRow `json:"data"`
 	}
+
+	DeleteNoteResponse struct {
+		Message string `json:"message"`
+	}
 )

@@ -34,4 +34,9 @@ func RegisterNoteRoute(r fiber.Router) {
 		middleware.JwtMiddleware, middleware.NoteOwnership,
 		noteController.UpdateNote,
 	)
+	r.Delete(
+		"/:note_id",
+		middleware.JwtMiddleware, middleware.NoteOwnership,
+		noteController.DeleteNote,
+	)
 }

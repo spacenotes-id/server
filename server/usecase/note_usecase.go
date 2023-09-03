@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -225,8 +226,26 @@ func (n *NoteUsecase) UpdateNote(
 	}
 
 	response := &dto.UpdateNoteResponse{
-		Message: "Your note has been updated successfully",
+		Message: fmt.Sprintf("Note with id %v has been updated", noteID),
 		Data:    *updatedNote,
+	}
+
+	return response, nil
+}
+
+func (n *NoteUsecase) DeleteNote(id int) (*dto.DeleteNoteResponse, error) {
+	ctx := context.Background()
+
+	if _, err := n.noteRepo.FindNoteByID(ctx, id); err != nil {
+		return nil, err
+	}
+
+	if err := n.noteRepo.DeleteNote(ctx, id); err != nil {
+		return nil, err
+	}
+
+	response := &dto.DeleteNoteResponse{
+		Message: fmt.Sprintf("Note with id %v has been deleted", id),
 	}
 
 	return response, nil
