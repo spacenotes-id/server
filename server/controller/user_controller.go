@@ -3,10 +3,10 @@ package controller
 import (
 	"github.com/asaskevich/govalidator"
 	"github.com/gofiber/fiber/v2"
-	"github.com/tfkhdyt/SpaceNotes/server/dto"
-	"github.com/tfkhdyt/SpaceNotes/server/helper/auth"
-	"github.com/tfkhdyt/SpaceNotes/server/helper/exception"
-	"github.com/tfkhdyt/SpaceNotes/server/usecase"
+	"github.com/spacenotes-id/SpaceNotes/server/dto"
+	"github.com/spacenotes-id/SpaceNotes/server/helper/auth"
+	"github.com/spacenotes-id/SpaceNotes/server/helper/exception"
+	"github.com/spacenotes-id/SpaceNotes/server/usecase"
 )
 
 type UserController struct {

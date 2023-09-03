@@ -6,7 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
-	"github.com/tfkhdyt/SpaceNotes/server/database/postgres/sqlc"
+	"github.com/spacenotes-id/SpaceNotes/server/database/postgres/sqlc"
 )
 
 type SpaceRepoPostgres struct {

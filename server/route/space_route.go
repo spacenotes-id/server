@@ -3,8 +3,8 @@ package route
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/goioc/di"
-	"github.com/tfkhdyt/SpaceNotes/server/controller"
-	"github.com/tfkhdyt/SpaceNotes/server/middleware"
+	"github.com/spacenotes-id/SpaceNotes/server/controller"
+	"github.com/spacenotes-id/SpaceNotes/server/middleware"
 )
 
 func RegisterSpaceRoute(r fiber.Router) {

@@ -1,6 +1,6 @@
 package dto
 
-import "github.com/tfkhdyt/SpaceNotes/server/database/postgres/sqlc"
+import "github.com/spacenotes-id/SpaceNotes/server/database/postgres/sqlc"
 
 type (
 	CreateNoteRequest struct {

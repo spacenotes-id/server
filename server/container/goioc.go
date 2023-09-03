@@ -5,11 +5,11 @@ import (
 
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/goioc/di"
-	"github.com/tfkhdyt/SpaceNotes/server/controller"
-	postgresDB "github.com/tfkhdyt/SpaceNotes/server/database/postgres"
-	"github.com/tfkhdyt/SpaceNotes/server/repository/postgres"
-	"github.com/tfkhdyt/SpaceNotes/server/service"
-	"github.com/tfkhdyt/SpaceNotes/server/usecase"
+	"github.com/spacenotes-id/SpaceNotes/server/controller"
+	postgresDB "github.com/spacenotes-id/SpaceNotes/server/database/postgres"
+	"github.com/spacenotes-id/SpaceNotes/server/repository/postgres"
+	"github.com/spacenotes-id/SpaceNotes/server/service"
+	"github.com/spacenotes-id/SpaceNotes/server/usecase"
 )
 
 type bean struct {

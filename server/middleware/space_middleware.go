@@ -3,8 +3,8 @@ package middleware
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/goioc/di"
-	"github.com/tfkhdyt/SpaceNotes/server/helper/auth"
-	"github.com/tfkhdyt/SpaceNotes/server/usecase"
+	"github.com/spacenotes-id/SpaceNotes/server/helper/auth"
+	"github.com/spacenotes-id/SpaceNotes/server/usecase"
 )
 
 func SpaceOwnership(c *fiber.Ctx) error {

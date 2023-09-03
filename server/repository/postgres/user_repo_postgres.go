@@ -7,8 +7,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/jackc/pgx/v5/pgtype"
-	"github.com/tfkhdyt/SpaceNotes/server/database/postgres"
-	"github.com/tfkhdyt/SpaceNotes/server/database/postgres/sqlc"
+	"github.com/spacenotes-id/SpaceNotes/server/database/postgres"
+	"github.com/spacenotes-id/SpaceNotes/server/database/postgres/sqlc"
 )
 
 type UserRepoPostgres struct {

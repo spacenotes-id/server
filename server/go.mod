@@ -1,4 +1,4 @@
-module github.com/tfkhdyt/SpaceNotes/server
+module github.com/spacenotes-id/SpaceNotes/server
 
 go 1.21.0
 

@@ -5,8 +5,8 @@ import (
 
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/tfkhdyt/SpaceNotes/server/config"
-	"github.com/tfkhdyt/SpaceNotes/server/database/postgres/sqlc"
+	"github.com/spacenotes-id/SpaceNotes/server/config"
+	"github.com/spacenotes-id/SpaceNotes/server/database/postgres/sqlc"
 )
 
 var (

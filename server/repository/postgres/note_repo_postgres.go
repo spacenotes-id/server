@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/tfkhdyt/SpaceNotes/server/database/postgres/sqlc"
+	"github.com/spacenotes-id/SpaceNotes/server/database/postgres/sqlc"
 )
 
 type NoteRepoPostgres struct {

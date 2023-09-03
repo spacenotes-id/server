@@ -3,7 +3,7 @@ package validation
 import (
 	"github.com/asaskevich/govalidator"
 	"github.com/gofiber/fiber/v2"
-	"github.com/tfkhdyt/SpaceNotes/server/helper/exception"
+	"github.com/spacenotes-id/SpaceNotes/server/helper/exception"
 )
 
 func ValidateBody(c *fiber.Ctx, payload any) error {

@@ -12,10 +12,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/tfkhdyt/SpaceNotes/server/container"
-	"github.com/tfkhdyt/SpaceNotes/server/database/postgres"
-	"github.com/tfkhdyt/SpaceNotes/server/helper/exception"
-	"github.com/tfkhdyt/SpaceNotes/server/route"
+	"github.com/spacenotes-id/SpaceNotes/server/container"
+	"github.com/spacenotes-id/SpaceNotes/server/database/postgres"
+	"github.com/spacenotes-id/SpaceNotes/server/helper/exception"
+	"github.com/spacenotes-id/SpaceNotes/server/route"
 )
 
 func init() {

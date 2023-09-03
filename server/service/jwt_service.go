@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/tfkhdyt/SpaceNotes/server/config"
+	"github.com/spacenotes-id/SpaceNotes/server/config"
 )
 
 type JwtService struct{}

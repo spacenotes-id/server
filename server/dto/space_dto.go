@@ -3,7 +3,7 @@ package dto
 import (
 	"time"
 
-	"github.com/tfkhdyt/SpaceNotes/server/database/postgres/sqlc"
+	"github.com/spacenotes-id/SpaceNotes/server/database/postgres/sqlc"
 )
 
 type (

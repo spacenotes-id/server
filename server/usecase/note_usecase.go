@@ -4,10 +4,10 @@ import (
 	"context"
 
 	"github.com/jackc/pgx/v5/pgtype"
-	"github.com/tfkhdyt/SpaceNotes/server/database/postgres/sqlc"
-	"github.com/tfkhdyt/SpaceNotes/server/dto"
-	"github.com/tfkhdyt/SpaceNotes/server/helper/sql"
-	"github.com/tfkhdyt/SpaceNotes/server/repository/postgres"
+	"github.com/spacenotes-id/SpaceNotes/server/database/postgres/sqlc"
+	"github.com/spacenotes-id/SpaceNotes/server/dto"
+	"github.com/spacenotes-id/SpaceNotes/server/helper/sql"
+	"github.com/spacenotes-id/SpaceNotes/server/repository/postgres"
 )
 
 type NoteUsecase struct {
