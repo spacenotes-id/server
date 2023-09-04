@@ -66,11 +66,18 @@ func (q *Queries) DeleteNote(ctx context.Context, id int32) error {
 }
 
 const findAllNotes = `-- name: FindAllNotes :many
-SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes WHERE user_id = $1
+SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes 
+WHERE user_id = $1 AND 
+(title ILIKE $2 OR body ILIKE $2)
 `
 
-func (q *Queries) FindAllNotes(ctx context.Context, userID int32) ([]*Note, error) {
-	rows, err := q.db.Query(ctx, findAllNotes, userID)
+type FindAllNotesParams struct {
+	UserID  int32  `json:"user_id"`
+	Keyword string `json:"keyword"`
+}
+
+func (q *Queries) FindAllNotes(ctx context.Context, arg FindAllNotesParams) ([]*Note, error) {
+	rows, err := q.db.Query(ctx, findAllNotes, arg.UserID, arg.Keyword)
 	if err != nil {
 		return nil, err
 	}
@@ -99,11 +106,18 @@ func (q *Queries) FindAllNotes(ctx context.Context, userID int32) ([]*Note, erro
 }
 
 const findAllNotesBySpaceID = `-- name: FindAllNotesBySpaceID :many
-SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes WHERE space_id = $1
+SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes 
+WHERE space_id = $1 AND
+(title ILIKE $2 OR body ILIKE $2)
 `
 
-func (q *Queries) FindAllNotesBySpaceID(ctx context.Context, spaceID int32) ([]*Note, error) {
-	rows, err := q.db.Query(ctx, findAllNotesBySpaceID, spaceID)
+type FindAllNotesBySpaceIDParams struct {
+	SpaceID int32  `json:"space_id"`
+	Keyword string `json:"keyword"`
+}
+
+func (q *Queries) FindAllNotesBySpaceID(ctx context.Context, arg FindAllNotesBySpaceIDParams) ([]*Note, error) {
+	rows, err := q.db.Query(ctx, findAllNotesBySpaceID, arg.SpaceID, arg.Keyword)
 	if err != nil {
 		return nil, err
 	}
@@ -133,16 +147,18 @@ func (q *Queries) FindAllNotesBySpaceID(ctx context.Context, spaceID int32) ([]*
 
 const findAllNotesBySpaceIDAndStatus = `-- name: FindAllNotesBySpaceIDAndStatus :many
 SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes
-WHERE space_id = $1 AND status = $2
+WHERE space_id = $1 AND status = $2 AND
+(title ILIKE $3 OR body ILIKE $3)
 `
 
 type FindAllNotesBySpaceIDAndStatusParams struct {
 	SpaceID int32  `json:"space_id"`
 	Status  Status `json:"status"`
+	Keyword string `json:"keyword"`
 }
 
 func (q *Queries) FindAllNotesBySpaceIDAndStatus(ctx context.Context, arg FindAllNotesBySpaceIDAndStatusParams) ([]*Note, error) {
-	rows, err := q.db.Query(ctx, findAllNotesBySpaceIDAndStatus, arg.SpaceID, arg.Status)
+	rows, err := q.db.Query(ctx, findAllNotesBySpaceIDAndStatus, arg.SpaceID, arg.Status, arg.Keyword)
 	if err != nil {
 		return nil, err
 	}
@@ -171,16 +187,19 @@ func (q *Queries) FindAllNotesBySpaceIDAndStatus(ctx context.Context, arg FindAl
 }
 
 const findAllNotesByStatus = `-- name: FindAllNotesByStatus :many
-SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes WHERE user_id = $1 AND status = $2
+SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes 
+WHERE user_id = $1 AND status = $2 AND
+(title ILIKE $3 OR body ILIKE $3)
 `
 
 type FindAllNotesByStatusParams struct {
-	UserID int32  `json:"user_id"`
-	Status Status `json:"status"`
+	UserID  int32  `json:"user_id"`
+	Status  Status `json:"status"`
+	Keyword string `json:"keyword"`
 }
 
 func (q *Queries) FindAllNotesByStatus(ctx context.Context, arg FindAllNotesByStatusParams) ([]*Note, error) {
-	rows, err := q.db.Query(ctx, findAllNotesByStatus, arg.UserID, arg.Status)
+	rows, err := q.db.Query(ctx, findAllNotesByStatus, arg.UserID, arg.Status, arg.Keyword)
 	if err != nil {
 		return nil, err
 	}

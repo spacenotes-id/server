@@ -6,17 +6,24 @@ INSERT INTO notes (
 ) RETURNING id, user_id, space_id, title, body, status, created_at;
 
 -- name: FindAllNotes :many
-SELECT * FROM notes WHERE user_id = $1;
+SELECT * FROM notes 
+WHERE user_id = $1 AND 
+(title ILIKE sqlc.arg('keyword') OR body ILIKE sqlc.arg('keyword'));
 
 -- name: FindAllNotesByStatus :many
-SELECT * FROM notes WHERE user_id = $1 AND status = $2;
+SELECT * FROM notes 
+WHERE user_id = $1 AND status = $2 AND
+(title ILIKE sqlc.arg('keyword') OR body ILIKE sqlc.arg('keyword'));
 
 -- name: FindAllNotesBySpaceID :many
-SELECT * FROM notes WHERE space_id = $1;
+SELECT * FROM notes 
+WHERE space_id = $1 AND
+(title ILIKE sqlc.arg('keyword') OR body ILIKE sqlc.arg('keyword'));
 
 -- name: FindAllNotesBySpaceIDAndStatus :many
 SELECT * FROM notes
-WHERE space_id = $1 AND status = $2;
+WHERE space_id = $1 AND status = $2 AND
+(title ILIKE sqlc.arg('keyword') OR body ILIKE sqlc.arg('keyword'));
 
 -- name: FindNoteByID :one
 SELECT * FROM notes WHERE id = $1 LIMIT 1;
