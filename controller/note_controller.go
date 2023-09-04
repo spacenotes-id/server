@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/spacenotes-id/server/database/postgres/sqlc"
 	"github.com/spacenotes-id/server/dto"
 	"github.com/spacenotes-id/server/helper/auth"
 	"github.com/spacenotes-id/server/helper/note"
@@ -32,7 +33,13 @@ func (n *NoteController) CreateNote(c *fiber.Ctx) error {
 
 func (n *NoteController) FindAllNotes(c *fiber.Ctx) error {
 	userID := auth.GetUserIDFromClaims(c)
+
 	query := c.Queries()
+	if err := validation.ValidateStatusQuery(
+		sqlc.Status(query["status"]),
+	); err != nil {
+		return err
+	}
 
 	notes, err := n.noteUsecase.FindAllNotes(userID, query)
 	if err != nil {
@@ -48,6 +55,11 @@ func (n *NoteController) FindAllNotesBySpaceID(c *fiber.Ctx) error {
 		return err
 	}
 	query := c.Queries()
+	if err := validation.ValidateStatusQuery(
+		sqlc.Status(query["status"]),
+	); err != nil {
+		return err
+	}
 
 	notes, errFind := n.noteUsecase.FindAllNotesBySpaceID(spaceID, query)
 	if errFind != nil {
