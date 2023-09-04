@@ -18,23 +18,7 @@ type (
 	}
 
 	FindAllNotesResponse struct {
-		Data []*sqlc.FindAllNotesRow `json:"data"`
-	}
-
-	FindAllNotesBySpaceIDResponse struct {
-		Data []*sqlc.FindAllNotesBySpaceIDRow `json:"data"`
-	}
-
-	FindAllTrashedNotesResponse struct {
-		Data []*sqlc.FindAllTrashedNotesRow `json:"data"`
-	}
-
-	FindAllFavoriteNotesResponse struct {
-		Data []*sqlc.FindAllFavoriteNotesRow `json:"data"`
-	}
-
-	FindAllArchivedNotesResponse struct {
-		Data []*sqlc.FindAllArchivedNotesRow `json:"data"`
+		Data []*sqlc.Note `json:"data"`
 	}
 
 	FindNoteByIDResponse struct {

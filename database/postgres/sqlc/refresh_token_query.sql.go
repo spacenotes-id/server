@@ -28,7 +28,7 @@ func (q *Queries) DeleteToken(ctx context.Context, token string) error {
 }
 
 const findToken = `-- name: FindToken :one
-SELECT token FROM refresh_tokens WHERE token = $1
+SELECT token FROM refresh_tokens WHERE token = $1 LIMIT 1
 `
 
 func (q *Queries) FindToken(ctx context.Context, token string) (string, error) {

@@ -56,6 +56,7 @@ func (n *NoteUsecase) CreateNote(
 
 func (n *NoteUsecase) FindAllNotes(
 	userID int,
+	query map[string]string,
 ) (*dto.FindAllNotesResponse, error) {
 	ctx := context.Background()
 
@@ -63,9 +64,23 @@ func (n *NoteUsecase) FindAllNotes(
 		return nil, err
 	}
 
-	notes, err := n.noteRepo.FindAllNotes(ctx, userID)
-	if err != nil {
-		return nil, err
+	var notes []*sqlc.Note
+	var err error
+
+	if query["status"] != "" {
+		notes, err = n.noteRepo.FindAllNotesByStatus(
+			ctx,
+			userID,
+			sqlc.Status(query["status"]),
+		)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		notes, err = n.noteRepo.FindAllNotes(ctx, userID)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	response := &dto.FindAllNotesResponse{
@@ -77,82 +92,34 @@ func (n *NoteUsecase) FindAllNotes(
 
 func (n *NoteUsecase) FindAllNotesBySpaceID(
 	spaceID int,
-) (*dto.FindAllNotesBySpaceIDResponse, error) {
+	query map[string]string,
+) (*dto.FindAllNotesResponse, error) {
 	ctx := context.Background()
 
 	if _, err := n.spaceUsecase.FindSpaceByID(spaceID); err != nil {
 		return nil, err
 	}
 
-	notes, err := n.noteRepo.FindAllNotesBySpaceID(ctx, spaceID)
-	if err != nil {
-		return nil, err
+	var notes []*sqlc.Note
+	var err error
+
+	if query["status"] != "" {
+		notes, err = n.noteRepo.FindAllNotesBySpaceIDAndStatus(
+			ctx,
+			spaceID,
+			sqlc.Status(query["status"]),
+		)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		notes, err = n.noteRepo.FindAllNotesBySpaceID(ctx, spaceID)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	response := &dto.FindAllNotesBySpaceIDResponse{
-		Data: notes,
-	}
-
-	return response, nil
-}
-
-func (n *NoteUsecase) FindAllTrashedNotes(
-	userID int,
-) (*dto.FindAllTrashedNotesResponse, error) {
-	ctx := context.Background()
-
-	if _, err := n.userRepo.FindUserByID(ctx, userID); err != nil {
-		return nil, err
-	}
-
-	notes, errFind := n.noteRepo.FindAllTrashedNotes(ctx, userID)
-	if errFind != nil {
-		return nil, errFind
-	}
-
-	response := &dto.FindAllTrashedNotesResponse{
-		Data: notes,
-	}
-
-	return response, nil
-}
-
-func (n *NoteUsecase) FindAllFavoriteNotes(
-	userID int,
-) (*dto.FindAllFavoriteNotesResponse, error) {
-	ctx := context.Background()
-
-	if _, err := n.userRepo.FindUserByID(ctx, userID); err != nil {
-		return nil, err
-	}
-
-	notes, errFind := n.noteRepo.FindAllFavoriteNotes(ctx, userID)
-	if errFind != nil {
-		return nil, errFind
-	}
-
-	response := &dto.FindAllFavoriteNotesResponse{
-		Data: notes,
-	}
-
-	return response, nil
-}
-
-func (n *NoteUsecase) FindAllArchivedNotes(
-	userID int,
-) (*dto.FindAllArchivedNotesResponse, error) {
-	ctx := context.Background()
-
-	if _, err := n.userRepo.FindUserByID(ctx, userID); err != nil {
-		return nil, err
-	}
-
-	notes, errFind := n.noteRepo.FindAllArchivedNotes(ctx, userID)
-	if errFind != nil {
-		return nil, errFind
-	}
-
-	response := &dto.FindAllArchivedNotesResponse{
+	response := &dto.FindAllNotesResponse{
 		Data: notes,
 	}
 

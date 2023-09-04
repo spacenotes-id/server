@@ -30,7 +30,7 @@ func (n *NoteRepoPostgres) CreateNote(
 func (n *NoteRepoPostgres) FindAllNotes(
 	ctx context.Context,
 	userID int,
-) ([]*sqlc.FindAllNotesRow, error) {
+) ([]*sqlc.Note, error) {
 	notes, err := n.querier.FindAllNotes(ctx, int32(userID))
 	if err != nil {
 		log.Error(err)
@@ -44,7 +44,7 @@ func (n *NoteRepoPostgres) FindAllNotes(
 func (n *NoteRepoPostgres) FindAllNotesBySpaceID(
 	ctx context.Context,
 	spaceID int,
-) ([]*sqlc.FindAllNotesBySpaceIDRow, error) {
+) ([]*sqlc.Note, error) {
 	notes, err := n.querier.FindAllNotesBySpaceID(ctx, int32(spaceID))
 	if err != nil {
 		log.Error(err)
@@ -55,49 +55,38 @@ func (n *NoteRepoPostgres) FindAllNotesBySpaceID(
 	return notes, nil
 }
 
-func (n *NoteRepoPostgres) FindAllTrashedNotes(
+func (n *NoteRepoPostgres) FindAllNotesByStatus(
 	ctx context.Context,
 	userID int,
-) ([]*sqlc.FindAllTrashedNotesRow, error) {
-	notes, err := n.querier.FindAllTrashedNotes(ctx, int32(userID))
+	status sqlc.Status,
+) ([]*sqlc.Note, error) {
+	notes, err := n.querier.FindAllNotesByStatus(ctx, sqlc.FindAllNotesByStatusParams{
+		UserID: int32(userID),
+		Status: status,
+	})
 	if err != nil {
 		log.Error(err)
 		return nil, fiber.NewError(
 			fiber.StatusInternalServerError,
-			"Failed to find all trashed notes",
+			"Failed to find all notes by status",
 		)
 	}
 
 	return notes, nil
 }
 
-func (n *NoteRepoPostgres) FindAllFavoriteNotes(
+func (n *NoteRepoPostgres) FindAllNotesBySpaceIDAndStatus(
 	ctx context.Context,
-	userID int,
-) ([]*sqlc.FindAllFavoriteNotesRow, error) {
-	notes, err := n.querier.FindAllFavoriteNotes(ctx, int32(userID))
+	spaceID int,
+	status sqlc.Status,
+) ([]*sqlc.Note, error) {
+	notes, err := n.querier.FindAllNotesBySpaceIDAndStatus(ctx, sqlc.FindAllNotesBySpaceIDAndStatusParams{
+		SpaceID: int32(spaceID),
+		Status:  status,
+	})
 	if err != nil {
 		log.Error(err)
-		return nil, fiber.NewError(
-			fiber.StatusInternalServerError,
-			"Failed to find all favorite notes",
-		)
-	}
-
-	return notes, nil
-}
-
-func (n *NoteRepoPostgres) FindAllArchivedNotes(
-	ctx context.Context,
-	userID int,
-) ([]*sqlc.FindAllArchivedNotesRow, error) {
-	notes, err := n.querier.FindAllArchivedNotes(ctx, int32(userID))
-	if err != nil {
-		log.Error(err)
-		return nil, fiber.NewError(
-			fiber.StatusInternalServerError,
-			"Failed to find all archived notes",
-		)
+		return nil, fiber.NewError(fiber.StatusInternalServerError, "Failed to find all notes by space id and status")
 	}
 
 	return notes, nil

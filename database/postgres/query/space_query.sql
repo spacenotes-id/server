@@ -7,7 +7,7 @@ SELECT id, name, emoji, is_locked, created_at, updated_at FROM spaces
 WHERE user_id = $1 ORDER BY id;
 
 -- name: FindSpaceByID :one
-SELECT * FROM spaces WHERE id = $1;
+SELECT * FROM spaces WHERE id = $1 LIMIT 1;
 
 -- name: UpdateSpace :one
 UPDATE spaces

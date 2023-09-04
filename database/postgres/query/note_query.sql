@@ -6,32 +6,20 @@ INSERT INTO notes (
 ) RETURNING id, user_id, space_id, title, body, status, created_at;
 
 -- name: FindAllNotes :many
-SELECT id, space_id, title, body, status, created_at, updated_at
-FROM notes
-WHERE user_id = $1 AND status < 'archived'::status;
+SELECT * FROM notes WHERE user_id = $1;
+
+-- name: FindAllNotesByStatus :many
+SELECT * FROM notes WHERE user_id = $1 AND status = $2;
 
 -- name: FindAllNotesBySpaceID :many
-SELECT id, title, body, status, created_at, updated_at
-FROM notes
-WHERE space_id = $1 AND status < 'archived'::status;
+SELECT * FROM notes WHERE space_id = $1;
 
--- name: FindAllTrashedNotes :many
-SELECT id, space_id, title, body, created_at, updated_at
-FROM notes
-WHERE user_id = $1 AND status = 'trashed'::status;
-
--- name: FindAllFavoriteNotes :many
-SELECT id, space_id, title, body, created_at, updated_at
-FROM notes
-WHERE user_id = $1 AND status = 'favorite'::status;
-
--- name: FindAllArchivedNotes :many
-SELECT id, space_id, title, body, created_at, updated_at
-FROM notes
-WHERE user_id = $1 AND status = 'archived'::status;
+-- name: FindAllNotesBySpaceIDAndStatus :many
+SELECT * FROM notes
+WHERE space_id = $1 AND status = $2;
 
 -- name: FindNoteByID :one
-SELECT * FROM notes WHERE id = $1;
+SELECT * FROM notes WHERE id = $1 LIMIT 1;
 
 -- name: UpdateNote :one
 UPDATE notes

@@ -65,117 +65,22 @@ func (q *Queries) DeleteNote(ctx context.Context, id int32) error {
 	return err
 }
 
-const findAllArchivedNotes = `-- name: FindAllArchivedNotes :many
-SELECT id, space_id, title, body, created_at, updated_at
-FROM notes
-WHERE user_id = $1 AND status = 'archived'::status
-`
-
-type FindAllArchivedNotesRow struct {
-	ID        int32            `json:"id"`
-	SpaceID   int32            `json:"space_id"`
-	Title     string           `json:"title"`
-	Body      pgtype.Text      `json:"body"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
-	UpdatedAt pgtype.Timestamp `json:"updated_at"`
-}
-
-func (q *Queries) FindAllArchivedNotes(ctx context.Context, userID int32) ([]*FindAllArchivedNotesRow, error) {
-	rows, err := q.db.Query(ctx, findAllArchivedNotes, userID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []*FindAllArchivedNotesRow{}
-	for rows.Next() {
-		var i FindAllArchivedNotesRow
-		if err := rows.Scan(
-			&i.ID,
-			&i.SpaceID,
-			&i.Title,
-			&i.Body,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, &i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-const findAllFavoriteNotes = `-- name: FindAllFavoriteNotes :many
-SELECT id, space_id, title, body, created_at, updated_at
-FROM notes
-WHERE user_id = $1 AND status = 'favorite'::status
-`
-
-type FindAllFavoriteNotesRow struct {
-	ID        int32            `json:"id"`
-	SpaceID   int32            `json:"space_id"`
-	Title     string           `json:"title"`
-	Body      pgtype.Text      `json:"body"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
-	UpdatedAt pgtype.Timestamp `json:"updated_at"`
-}
-
-func (q *Queries) FindAllFavoriteNotes(ctx context.Context, userID int32) ([]*FindAllFavoriteNotesRow, error) {
-	rows, err := q.db.Query(ctx, findAllFavoriteNotes, userID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []*FindAllFavoriteNotesRow{}
-	for rows.Next() {
-		var i FindAllFavoriteNotesRow
-		if err := rows.Scan(
-			&i.ID,
-			&i.SpaceID,
-			&i.Title,
-			&i.Body,
-			&i.CreatedAt,
-			&i.UpdatedAt,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, &i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const findAllNotes = `-- name: FindAllNotes :many
-SELECT id, space_id, title, body, status, created_at, updated_at
-FROM notes
-WHERE user_id = $1 AND status < 'archived'::status
+SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes WHERE user_id = $1
 `
 
-type FindAllNotesRow struct {
-	ID        int32            `json:"id"`
-	SpaceID   int32            `json:"space_id"`
-	Title     string           `json:"title"`
-	Body      pgtype.Text      `json:"body"`
-	Status    Status           `json:"status"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
-	UpdatedAt pgtype.Timestamp `json:"updated_at"`
-}
-
-func (q *Queries) FindAllNotes(ctx context.Context, userID int32) ([]*FindAllNotesRow, error) {
+func (q *Queries) FindAllNotes(ctx context.Context, userID int32) ([]*Note, error) {
 	rows, err := q.db.Query(ctx, findAllNotes, userID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []*FindAllNotesRow{}
+	items := []*Note{}
 	for rows.Next() {
-		var i FindAllNotesRow
+		var i Note
 		if err := rows.Scan(
 			&i.ID,
+			&i.UserID,
 			&i.SpaceID,
 			&i.Title,
 			&i.Body,
@@ -194,31 +99,22 @@ func (q *Queries) FindAllNotes(ctx context.Context, userID int32) ([]*FindAllNot
 }
 
 const findAllNotesBySpaceID = `-- name: FindAllNotesBySpaceID :many
-SELECT id, title, body, status, created_at, updated_at
-FROM notes
-WHERE space_id = $1 AND status < 'archived'::status
+SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes WHERE space_id = $1
 `
 
-type FindAllNotesBySpaceIDRow struct {
-	ID        int32            `json:"id"`
-	Title     string           `json:"title"`
-	Body      pgtype.Text      `json:"body"`
-	Status    Status           `json:"status"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
-	UpdatedAt pgtype.Timestamp `json:"updated_at"`
-}
-
-func (q *Queries) FindAllNotesBySpaceID(ctx context.Context, spaceID int32) ([]*FindAllNotesBySpaceIDRow, error) {
+func (q *Queries) FindAllNotesBySpaceID(ctx context.Context, spaceID int32) ([]*Note, error) {
 	rows, err := q.db.Query(ctx, findAllNotesBySpaceID, spaceID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []*FindAllNotesBySpaceIDRow{}
+	items := []*Note{}
 	for rows.Next() {
-		var i FindAllNotesBySpaceIDRow
+		var i Note
 		if err := rows.Scan(
 			&i.ID,
+			&i.UserID,
+			&i.SpaceID,
 			&i.Title,
 			&i.Body,
 			&i.Status,
@@ -235,35 +131,70 @@ func (q *Queries) FindAllNotesBySpaceID(ctx context.Context, spaceID int32) ([]*
 	return items, nil
 }
 
-const findAllTrashedNotes = `-- name: FindAllTrashedNotes :many
-SELECT id, space_id, title, body, created_at, updated_at
-FROM notes
-WHERE user_id = $1 AND status = 'trashed'::status
+const findAllNotesBySpaceIDAndStatus = `-- name: FindAllNotesBySpaceIDAndStatus :many
+SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes
+WHERE space_id = $1 AND status = $2
 `
 
-type FindAllTrashedNotesRow struct {
-	ID        int32            `json:"id"`
-	SpaceID   int32            `json:"space_id"`
-	Title     string           `json:"title"`
-	Body      pgtype.Text      `json:"body"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
-	UpdatedAt pgtype.Timestamp `json:"updated_at"`
+type FindAllNotesBySpaceIDAndStatusParams struct {
+	SpaceID int32  `json:"space_id"`
+	Status  Status `json:"status"`
 }
 
-func (q *Queries) FindAllTrashedNotes(ctx context.Context, userID int32) ([]*FindAllTrashedNotesRow, error) {
-	rows, err := q.db.Query(ctx, findAllTrashedNotes, userID)
+func (q *Queries) FindAllNotesBySpaceIDAndStatus(ctx context.Context, arg FindAllNotesBySpaceIDAndStatusParams) ([]*Note, error) {
+	rows, err := q.db.Query(ctx, findAllNotesBySpaceIDAndStatus, arg.SpaceID, arg.Status)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []*FindAllTrashedNotesRow{}
+	items := []*Note{}
 	for rows.Next() {
-		var i FindAllTrashedNotesRow
+		var i Note
 		if err := rows.Scan(
 			&i.ID,
+			&i.UserID,
 			&i.SpaceID,
 			&i.Title,
 			&i.Body,
+			&i.Status,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, &i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const findAllNotesByStatus = `-- name: FindAllNotesByStatus :many
+SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes WHERE user_id = $1 AND status = $2
+`
+
+type FindAllNotesByStatusParams struct {
+	UserID int32  `json:"user_id"`
+	Status Status `json:"status"`
+}
+
+func (q *Queries) FindAllNotesByStatus(ctx context.Context, arg FindAllNotesByStatusParams) ([]*Note, error) {
+	rows, err := q.db.Query(ctx, findAllNotesByStatus, arg.UserID, arg.Status)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []*Note{}
+	for rows.Next() {
+		var i Note
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.SpaceID,
+			&i.Title,
+			&i.Body,
+			&i.Status,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -278,7 +209,7 @@ func (q *Queries) FindAllTrashedNotes(ctx context.Context, userID int32) ([]*Fin
 }
 
 const findNoteByID = `-- name: FindNoteByID :one
-SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes WHERE id = $1
+SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes WHERE id = $1 LIMIT 1
 `
 
 func (q *Queries) FindNoteByID(ctx context.Context, id int32) (*Note, error) {

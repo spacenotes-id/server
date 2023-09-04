@@ -102,7 +102,7 @@ func (q *Queries) FindAllSpacesByUserID(ctx context.Context, userID int32) ([]*F
 }
 
 const findSpaceByID = `-- name: FindSpaceByID :one
-SELECT id, user_id, name, emoji, is_locked, created_at, updated_at FROM spaces WHERE id = $1
+SELECT id, user_id, name, emoji, is_locked, created_at, updated_at FROM spaces WHERE id = $1 LIMIT 1
 `
 
 func (q *Queries) FindSpaceByID(ctx context.Context, id int32) (*Space, error) {
