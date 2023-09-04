@@ -29,13 +29,9 @@ func (n *NoteRepoPostgres) CreateNote(
 
 func (n *NoteRepoPostgres) FindAllNotes(
 	ctx context.Context,
-	userID int,
-	keyword string,
+	data sqlc.FindAllNotesParams,
 ) ([]*sqlc.Note, error) {
-	notes, err := n.querier.FindAllNotes(ctx, sqlc.FindAllNotesParams{
-		UserID:  int32(userID),
-		Keyword: fmt.Sprintf("%%%v%%", keyword),
-	})
+	notes, err := n.querier.FindAllNotes(ctx, data)
 	if err != nil {
 		log.Error(err)
 		return nil, fiber.
@@ -47,13 +43,9 @@ func (n *NoteRepoPostgres) FindAllNotes(
 
 func (n *NoteRepoPostgres) FindAllNotesBySpaceID(
 	ctx context.Context,
-	spaceID int,
-	keyword string,
+	data sqlc.FindAllNotesBySpaceIDParams,
 ) ([]*sqlc.Note, error) {
-	notes, err := n.querier.FindAllNotesBySpaceID(ctx, sqlc.FindAllNotesBySpaceIDParams{
-		SpaceID: int32(spaceID),
-		Keyword: fmt.Sprintf("%%%v%%", keyword),
-	})
+	notes, err := n.querier.FindAllNotesBySpaceID(ctx, data)
 	if err != nil {
 		log.Error(err)
 		return nil, fiber.
@@ -65,15 +57,9 @@ func (n *NoteRepoPostgres) FindAllNotesBySpaceID(
 
 func (n *NoteRepoPostgres) FindAllNotesByStatus(
 	ctx context.Context,
-	userID int,
-	status sqlc.Status,
-	keyword string,
+	data sqlc.FindAllNotesByStatusParams,
 ) ([]*sqlc.Note, error) {
-	notes, err := n.querier.FindAllNotesByStatus(ctx, sqlc.FindAllNotesByStatusParams{
-		UserID:  int32(userID),
-		Status:  status,
-		Keyword: fmt.Sprintf("%%%v%%", keyword),
-	})
+	notes, err := n.querier.FindAllNotesByStatus(ctx, data)
 	if err != nil {
 		log.Error(err)
 		return nil, fiber.NewError(
@@ -87,18 +73,15 @@ func (n *NoteRepoPostgres) FindAllNotesByStatus(
 
 func (n *NoteRepoPostgres) FindAllNotesBySpaceIDAndStatus(
 	ctx context.Context,
-	spaceID int,
-	status sqlc.Status,
-	keyword string,
+	data sqlc.FindAllNotesBySpaceIDAndStatusParams,
 ) ([]*sqlc.Note, error) {
-	notes, err := n.querier.FindAllNotesBySpaceIDAndStatus(ctx, sqlc.FindAllNotesBySpaceIDAndStatusParams{
-		SpaceID: int32(spaceID),
-		Status:  status,
-		Keyword: fmt.Sprintf("%%%v%%", keyword),
-	})
+	notes, err := n.querier.FindAllNotesBySpaceIDAndStatus(ctx, data)
 	if err != nil {
 		log.Error(err)
-		return nil, fiber.NewError(fiber.StatusInternalServerError, "Failed to find all notes by space id and status")
+		return nil, fiber.NewError(
+			fiber.StatusInternalServerError,
+			"Failed to find all notes by space id and status",
+		)
 	}
 
 	return notes, nil

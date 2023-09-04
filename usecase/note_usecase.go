@@ -70,15 +70,20 @@ func (n *NoteUsecase) FindAllNotes(
 	if query["status"] != "" {
 		notes, err = n.noteRepo.FindAllNotesByStatus(
 			ctx,
-			userID,
-			sqlc.Status(query["status"]),
-			query["search"],
+			sqlc.FindAllNotesByStatusParams{
+				UserID:  int32(userID),
+				Status:  sqlc.Status(query["status"]),
+				Keyword: fmt.Sprintf("%%%v%%", query["search"]),
+			},
 		)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		notes, err = n.noteRepo.FindAllNotes(ctx, userID, query["search"])
+		notes, err = n.noteRepo.FindAllNotes(ctx, sqlc.FindAllNotesParams{
+			UserID:  int32(userID),
+			Keyword: fmt.Sprintf("%%%v%%", query["search"]),
+		})
 		if err != nil {
 			return nil, err
 		}
@@ -107,15 +112,23 @@ func (n *NoteUsecase) FindAllNotesBySpaceID(
 	if query["status"] != "" {
 		notes, err = n.noteRepo.FindAllNotesBySpaceIDAndStatus(
 			ctx,
-			spaceID,
-			sqlc.Status(query["status"]),
-			query["search"],
+			sqlc.FindAllNotesBySpaceIDAndStatusParams{
+				SpaceID: int32(spaceID),
+				Status:  sqlc.Status(query["status"]),
+				Keyword: fmt.Sprintf("%%%v%%", query["search"]),
+			},
 		)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		notes, err = n.noteRepo.FindAllNotesBySpaceID(ctx, spaceID, query["search"])
+		notes, err = n.noteRepo.FindAllNotesBySpaceID(
+			ctx,
+			sqlc.FindAllNotesBySpaceIDParams{
+				SpaceID: int32(spaceID),
+				Keyword: fmt.Sprintf("%%%v%%", query["search"]),
+			},
+		)
 		if err != nil {
 			return nil, err
 		}
@@ -144,7 +157,9 @@ func (n *NoteUsecase) VerifyNoteOwnership(userID int, noteID int) error {
 	return nil
 }
 
-func (n *NoteUsecase) FindNoteByID(noteID int) (*dto.FindNoteByIDResponse, error) {
+func (n *NoteUsecase) FindNoteByID(
+	noteID int,
+) (*dto.FindNoteByIDResponse, error) {
 	ctx := context.Background()
 
 	note, err := n.noteRepo.FindNoteByID(ctx, noteID)
