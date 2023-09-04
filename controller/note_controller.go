@@ -135,3 +135,22 @@ func (n *NoteController) DeleteNote(c *fiber.Ctx) error {
 
 	return c.JSON(response)
 }
+
+func (n *NoteController) UpdateStatus(c *fiber.Ctx) error {
+	noteID, err := note.GetNoteIDFromParams(c)
+	if err != nil {
+		return err
+	}
+
+	payload := new(dto.UpdateStatusRequest)
+	if err := validation.ValidateBody(c, payload); err != nil {
+		return err
+	}
+
+	updatedNote, err := n.noteUsecase.ChangeStatus(noteID, payload.Status)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(updatedNote)
+}

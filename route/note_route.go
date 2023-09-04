@@ -17,7 +17,7 @@ func RegisterNoteRoute(r fiber.Router) {
 	r.Get(
 		"/favorite",
 		middleware.JwtMiddleware,
-		noteController.FindAllTrashedNotes,
+		noteController.FindAllFavoriteNotes,
 	)
 	r.Get(
 		"/archive",
@@ -38,5 +38,10 @@ func RegisterNoteRoute(r fiber.Router) {
 		"/:note_id",
 		middleware.JwtMiddleware, middleware.NoteOwnership,
 		noteController.DeleteNote,
+	)
+	r.Patch(
+		"/:note_id/status",
+		middleware.JwtMiddleware, middleware.NoteOwnership,
+		noteController.UpdateStatus,
 	)
 }

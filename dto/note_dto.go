@@ -42,10 +42,9 @@ type (
 	}
 
 	UpdateNoteRequest struct {
-		Title   string `json:"title" valid:"maxstringlength(50)~Note title length should not more than 50 characters"`
-		Body    string `json:"body"`
-		SpaceID int    `json:"space_id"`
-		// Status    string    `json:"status" valid:"in(normal|favorite|archived|trashed)~Invalid status"`
+		Title     string    `json:"title" valid:"maxstringlength(50)~Note title length should not more than 50 characters"`
+		Body      string    `json:"body"`
+		SpaceID   int       `json:"space_id"`
 		UpdatedAt time.Time `json:"updated_at"`
 	}
 	UpdateNoteResponse struct {
@@ -56,4 +55,9 @@ type (
 	DeleteNoteResponse struct {
 		Message string `json:"message"`
 	}
+
+	UpdateStatusRequest struct {
+		Status string `json:"status" valid:"in(normal|favorite|archived|trashed)~Invalid status"`
+	}
+	UpdateStatusResponse = UpdateNoteResponse
 )

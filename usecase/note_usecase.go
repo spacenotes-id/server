@@ -175,10 +175,10 @@ func (n *NoteUsecase) VerifyNoteOwnership(userID int, noteID int) error {
 	return nil
 }
 
-func (n *NoteUsecase) FindNoteByID(id int) (*dto.FindNoteByIDResponse, error) {
+func (n *NoteUsecase) FindNoteByID(noteID int) (*dto.FindNoteByIDResponse, error) {
 	ctx := context.Background()
 
-	note, err := n.noteRepo.FindNoteByID(ctx, id)
+	note, err := n.noteRepo.FindNoteByID(ctx, noteID)
 	if err != nil {
 		return nil, err
 	}
@@ -233,19 +233,46 @@ func (n *NoteUsecase) UpdateNote(
 	return response, nil
 }
 
-func (n *NoteUsecase) DeleteNote(id int) (*dto.DeleteNoteResponse, error) {
+func (n *NoteUsecase) DeleteNote(noteID int) (*dto.DeleteNoteResponse, error) {
 	ctx := context.Background()
 
-	if _, err := n.noteRepo.FindNoteByID(ctx, id); err != nil {
+	if _, err := n.noteRepo.FindNoteByID(ctx, noteID); err != nil {
 		return nil, err
 	}
 
-	if err := n.noteRepo.DeleteNote(ctx, id); err != nil {
+	if err := n.noteRepo.DeleteNote(ctx, noteID); err != nil {
 		return nil, err
 	}
 
 	response := &dto.DeleteNoteResponse{
-		Message: fmt.Sprintf("Note with id %v has been deleted", id),
+		Message: fmt.Sprintf("Note with id %v has been deleted", noteID),
+	}
+
+	return response, nil
+}
+
+func (n *NoteUsecase) ChangeStatus(
+	noteID int,
+	status string,
+) (*dto.UpdateStatusResponse, error) {
+	ctx := context.Background()
+
+	if _, err := n.noteRepo.FindNoteByID(ctx, noteID); err != nil {
+		return nil, err
+	}
+
+	updatedNote, err := n.noteRepo.UpdateNote(ctx, sqlc.UpdateNoteParams{
+		ID:        int32(noteID),
+		Status:    sqlc.NullStatus{Status: sqlc.Status(status), Valid: true},
+		UpdatedAt: pgtype.Timestamp{Time: time.Now(), Valid: true},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	response := &dto.UpdateStatusResponse{
+		Message: fmt.Sprintf("Status of note with id %v has been updated", noteID),
+		Data:    *updatedNote,
 	}
 
 	return response, nil
