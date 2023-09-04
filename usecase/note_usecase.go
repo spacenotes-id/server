@@ -72,12 +72,13 @@ func (n *NoteUsecase) FindAllNotes(
 			ctx,
 			userID,
 			sqlc.Status(query["status"]),
+			query["search"],
 		)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		notes, err = n.noteRepo.FindAllNotes(ctx, userID)
+		notes, err = n.noteRepo.FindAllNotes(ctx, userID, query["search"])
 		if err != nil {
 			return nil, err
 		}
@@ -108,12 +109,13 @@ func (n *NoteUsecase) FindAllNotesBySpaceID(
 			ctx,
 			spaceID,
 			sqlc.Status(query["status"]),
+			query["search"],
 		)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		notes, err = n.noteRepo.FindAllNotesBySpaceID(ctx, spaceID)
+		notes, err = n.noteRepo.FindAllNotesBySpaceID(ctx, spaceID, query["search"])
 		if err != nil {
 			return nil, err
 		}
