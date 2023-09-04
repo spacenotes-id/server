@@ -20,6 +20,14 @@ dev-watch: db-start
 sqlc-generate:
 	sqlc generate
 
+swag-fmt:
+	swag fmt
+
+swag-init:
+	swag init
+
+swag: swag-fmt swag-init
+
 # test:
 # 	go test -v ./...
 #
@@ -48,4 +56,4 @@ db-stop:
 db-status:
 	systemctl status postgresql
 
-.PHONY: build install start dev dev-watch sqlc-generate test test-cover test-cover-watch test-cover-html generate clean db-start db-stop db-status
+.PHONY: build install start dev dev-watch sqlc-generate test test-cover test-cover-watch test-cover-html generate clean db-start db-stop db-status, swag-init, swag-fmt, swag
