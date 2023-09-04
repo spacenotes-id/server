@@ -1,5 +1,13 @@
 package exception
 
+type HttpError struct {
+	Error string `json:"error"`
+}
+
+type ValErrors struct {
+	Errors []string `json:"errors"`
+}
+
 type ValidationError struct {
 	Err error
 }

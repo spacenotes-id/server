@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"github.com/spacenotes-id/server/database/postgres/sqlc"
+	"time"
 )
 
 type (
@@ -11,9 +11,16 @@ type (
 		Email    string `json:"email" valid:"required~Email is required,email~Invalid email"`
 		Password string `json:"password" valid:"required~Password is required"`
 	}
+	RegisterResponseData struct {
+		ID        int32     `json:"id"`
+		FullName  string    `json:"full_name"`
+		Username  string    `json:"username"`
+		Email     string    `json:"email"`
+		CreatedAt time.Time `json:"created_at"`
+	}
 	RegisterResponse struct {
-		Message string             `json:"message"`
-		Data    sqlc.CreateUserRow `json:"data"`
+		Message string               `json:"message"`
+		Data    RegisterResponseData `json:"data"`
 	}
 
 	LoginRequest struct {

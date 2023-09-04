@@ -58,7 +58,13 @@ func (a *AuthUsecase) Register(
 
 	response := &dto.RegisterResponse{
 		Message: "Your account has been created successfully",
-		Data:    *registeredUser,
+		Data: dto.RegisterResponseData{
+			ID:        registeredUser.ID,
+			FullName:  registeredUser.FullName.String,
+			Username:  registeredUser.Username,
+			Email:     registeredUser.Email,
+			CreatedAt: registeredUser.CreatedAt.Time,
+		},
 	}
 
 	return response, nil

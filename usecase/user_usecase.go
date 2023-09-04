@@ -54,7 +54,7 @@ func (u *UserUsecase) verifyUsernameAvailability(
 		ctx,
 		username,
 	); err == nil {
-		return err
+		return fiber.NewError(fiber.StatusBadRequest, "Username has been used")
 	}
 
 	return nil

@@ -1,0 +1,103 @@
+basePath: /v1
+consumes:
+- application/json
+definitions:
+  dto.RegisterRequest:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.RegisterResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.RegisterResponseData'
+      message:
+        type: string
+    type: object
+  dto.RegisterResponseData:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+      username:
+        type: string
+    type: object
+  exception.HttpError:
+    properties:
+      error:
+        type: string
+    type: object
+  exception.ValErrors:
+    properties:
+      errors:
+        items:
+          type: string
+        type: array
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: me@tfkhdyt.my.id
+    name: API Support
+    url: https://tfkhdyt.my.id
+  description: SpaceNotes REST API server
+  license:
+    name: MIT License
+    url: https://github.com/spacenotes-id/server/blob/main/LICENSE
+  title: SpaceNotes API
+  version: "1.0"
+paths:
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new account
+      parameters:
+      - description: Request body
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.RegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/exception.ValErrors'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+      summary: Register
+      tags:
+      - auth
+produces:
+- application/json
+securityDefinitions:
+  ApiKeyAuth:
+    description: JWT key
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

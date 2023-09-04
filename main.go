@@ -10,16 +10,22 @@ import (
 	"syscall"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/gofiber/swagger"
+	"github.com/spacenotes-id/server/config"
 	"github.com/spacenotes-id/server/container"
 	"github.com/spacenotes-id/server/database/postgres"
+	"github.com/spacenotes-id/server/docs"
 	"github.com/spacenotes-id/server/helper/exception"
 	"github.com/spacenotes-id/server/route"
 )
 
 func init() {
 	container.InitDI()
+	docs.SwaggerInfo.Host = config.ServerHost
+	docs.SwaggerInfo.Schemes = []string{config.ServerScheme}
 }
 
 func gracefullyShutdown(app *fiber.App, sigChan chan os.Signal) {
@@ -34,6 +40,26 @@ func gracefullyShutdown(app *fiber.App, sigChan chan os.Signal) {
 	postgres.Pool.Close()
 }
 
+//	@title			SpaceNotes API
+//	@version		1.0
+//	@description	SpaceNotes REST API server
+
+//	@contact.name	API Support
+//	@contact.url	https://tfkhdyt.my.id
+//	@contact.email	me@tfkhdyt.my.id
+
+//	@license.name	MIT License
+//	@license.url	https://github.com/spacenotes-id/server/blob/main/LICENSE
+
+//	@host		localhost:8080
+//	@BasePath	/v1
+//	@accept		json
+//	@produce	json
+
+// @securityDefinitions.apikey	ApiKeyAuth
+// @in							header
+// @name						Authorization
+// @description				JWT key
 func main() {
 	app := fiber.New(fiber.Config{
 		ErrorHandler: func(c *fiber.Ctx, err error) error {
@@ -52,12 +78,13 @@ func main() {
 				})
 			}
 
-			return c.Status(code).JSON(fiber.Map{
-				"error": err.Error(),
+			return c.Status(code).JSON(exception.HttpError{
+				Error: err.Error(),
 			})
 		},
 	})
 	app.Use(recover.New())
+	app.Use(cors.New())
 	app.Use(pprof.New())
 
 	port := flag.Uint("port", 8080, "server port")
@@ -69,6 +96,8 @@ func main() {
 	route.RegisterUserRoute(v1.Group("/users"))
 	route.RegisterSpaceRoute(v1.Group("/spaces"))
 	route.RegisterNoteRoute(v1.Group("/notes"))
+
+	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)

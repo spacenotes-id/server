@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/spacenotes-id/server/dto"
 	"github.com/spacenotes-id/server/helper/exception"
+	"github.com/spacenotes-id/server/helper/validation"
 	"github.com/spacenotes-id/server/usecase"
 )
 
@@ -14,15 +15,23 @@ type AuthController struct {
 	authUsecase *usecase.AuthUsecase `di.inject:"authUsecase"`
 }
 
+// Register godoc
+//
+//	@Summary		Register
+//	@Description	Register a new account
+//	@Tags			auth
+//	@Accept			json
+//	@Produce		json
+//	@Param			account	body		dto.RegisterRequest	true	"Request body"
+//	@Success		201		{object}	dto.RegisterResponse
+//	@Failure		422		{object}	exception.ValErrors
+//	@Failure		400		{object}	exception.HttpError
+//	@Failure		500		{object}	exception.HttpError
+//	@Router			/auth/register [post]
 func (a *AuthController) Register(c *fiber.Ctx) error {
 	newUser := new(dto.RegisterRequest)
-	if err := c.BodyParser(newUser); err != nil {
-		return fiber.
-			NewError(fiber.StatusUnprocessableEntity, "Failed to parse body")
-	}
-
-	if _, err := govalidator.ValidateStruct(newUser); err != nil {
-		return exception.NewValidationError(err)
+	if err := validation.ValidateBody(c, newUser); err != nil {
+		return err
 	}
 
 	result, err := a.authUsecase.Register(newUser)
