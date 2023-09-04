@@ -1,11 +1,11 @@
 package exception
 
 type HttpError struct {
-	Error string `json:"error"`
+	Error string `json:"error" example:"Something went wrong"`
 }
 
 type ValErrors struct {
-	Errors []string `json:"errors"`
+	Errors []string `json:"errors" example:"Invalid email,Username is required"`
 }
 
 type ValidationError struct {

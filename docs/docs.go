@@ -85,18 +85,32 @@ const docTemplate = `{
     "definitions": {
         "dto.RegisterRequest": {
             "type": "object",
+            "required": [
+                "email",
+                "password",
+                "username"
+            ],
             "properties": {
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "me@tfkhdyt.my.id"
                 },
                 "full_name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 70,
+                    "minLength": 2,
+                    "example": "Taufik Hidayat"
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "bruh1234"
                 },
                 "username": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 16,
+                    "minLength": 3,
+                    "example": "tfkhdyt"
                 }
             }
         },
@@ -107,7 +121,8 @@ const docTemplate = `{
                     "$ref": "#/definitions/dto.RegisterResponseData"
                 },
                 "message": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Your account has been created successfully"
                 }
             }
         },
@@ -115,19 +130,24 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "created_at": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "2023-09-04T21:00:43.775157Z"
                 },
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "me@tfkhdyt.my.id"
                 },
                 "full_name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Taufik Hidayat"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": 69
                 },
                 "username": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "tfkhdyt"
                 }
             }
         },
@@ -135,7 +155,8 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "error": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Something went wrong"
                 }
             }
         },
@@ -146,7 +167,11 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "type": "string"
-                    }
+                    },
+                    "example": [
+                        "Invalid email",
+                        "Username is required"
+                    ]
                 }
             }
         }
