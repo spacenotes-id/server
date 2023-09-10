@@ -88,7 +88,11 @@ func main() {
 	app.Use(cors.New())
 	app.Use(pprof.New())
 
-	port := flag.Uint("port", 8080, "server port")
+	port := "8080"
+	if config.PORT != "" {
+		port = config.PORT
+	}
+
 	flag.Parse()
 
 	v1 := app.Group("/v1")
@@ -104,7 +108,7 @@ func main() {
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	go gracefullyShutdown(app, sigChan)
 
-	if err := app.Listen(fmt.Sprintf(":%d", *port)); err != nil {
+	if err := app.Listen(fmt.Sprintf(":%v", port)); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
