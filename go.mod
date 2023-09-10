@@ -4,15 +4,15 @@ go 1.21.0
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
-	github.com/gofiber/contrib/jwt v1.0.5
+	github.com/gofiber/contrib/jwt v1.0.6
 	github.com/gofiber/fiber/v2 v2.49.1
-	github.com/gofiber/swagger v0.1.12
+	github.com/gofiber/swagger v0.1.13
 	github.com/goioc/di v1.7.1
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/jackc/pgx/v5 v5.4.3
 	github.com/joho/godotenv v1.5.1
 	github.com/swaggo/swag v1.16.2
-	golang.org/x/crypto v0.12.0
+	golang.org/x/crypto v0.13.0
 )
 
 require (
@@ -43,6 +43,6 @@ require (
 	golang.org/x/sync v0.3.0 // indirect
 	golang.org/x/sys v0.12.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
-	golang.org/x/tools v0.12.0 // indirect
+	golang.org/x/tools v0.13.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

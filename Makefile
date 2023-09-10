@@ -56,4 +56,4 @@ db-stop:
 db-status:
 	systemctl status postgresql
 
-.PHONY: build install start dev dev-watch sqlc-generate test test-cover test-cover-watch test-cover-html generate clean db-start db-stop db-status, swag-init, swag-fmt, swag
+.PHONY: build install start dev dev-watch sqlc-generate test test-cover test-cover-watch test-cover-html generate clean db-start db-stop db-status swag-init swag-fmt swag 
