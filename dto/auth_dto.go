@@ -24,8 +24,8 @@ type (
 	}
 
 	LoginRequest struct {
-		Email    string `json:"email" valid:"required~Email is required,email~Invalid email"`
-		Password string `json:"password" valid:"required~Password is required"`
+		Email    string `json:"email" valid:"required~Email is required,email~Invalid email" validate:"required" example:"me@tfkhdyt.my.id"`
+		Password string `json:"password" valid:"required~Password is required" validate:"required" example:"bruh1234" minLength:"8"`
 	}
 	LoginResponseData struct {
 		AccessToken  string `json:"access_token"`

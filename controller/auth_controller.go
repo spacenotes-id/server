@@ -5,6 +5,7 @@ import (
 
 	"github.com/asaskevich/govalidator"
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/spacenotes-id/server/dto"
 	"github.com/spacenotes-id/server/helper/exception"
 	"github.com/spacenotes-id/server/helper/validation"
@@ -42,15 +43,24 @@ func (a *AuthController) Register(c *fiber.Ctx) error {
 	return c.Status(201).JSON(result)
 }
 
+// Login godoc
+//
+//	@Summary		Login
+//	@Description	Login to get access token and refresh token
+//	@Tags			auth
+//	@Accept			json
+//	@Produce		json
+//	@Param			credentials	body		dto.LoginRequest	true	"Credentials"
+//	@Success		201			{object}	dto.LoginResponse
+//	@Failure		422			{object}	exception.ValErrors
+//	@Failure		400			{object}	exception.ValErrors
+//	@Failure		404			{object}	exception.HttpError
+//	@Failure		500			{object}	exception.HttpError
+//	@Router			/auth/login [post]
 func (a *AuthController) Login(c *fiber.Ctx) error {
 	payload := new(dto.LoginRequest)
-	if err := c.BodyParser(payload); err != nil {
-		return fiber.
-			NewError(fiber.StatusUnprocessableEntity, "Failed to parse body")
-	}
-
-	if _, err := govalidator.ValidateStruct(payload); err != nil {
-		return exception.NewValidationError(err)
+	if err := validation.ValidateBody(c, payload); err != nil {
+		return err
 	}
 
 	result, err := a.authUsecase.Login(payload)

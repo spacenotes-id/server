@@ -2,6 +2,33 @@ basePath: /v1
 consumes:
 - application/json
 definitions:
+  dto.LoginRequest:
+    properties:
+      email:
+        example: me@tfkhdyt.my.id
+        type: string
+      password:
+        example: bruh1234
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.LoginResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.LoginResponseData'
+      message:
+        type: string
+    type: object
+  dto.LoginResponseData:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
   dto.RegisterRequest:
     properties:
       email:
@@ -81,6 +108,44 @@ info:
   title: SpaceNotes API
   version: "1.0"
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login to get access token and refresh token
+      parameters:
+      - description: Credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.ValErrors'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/exception.ValErrors'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+      summary: Login
+      tags:
+      - auth
   /auth/register:
     post:
       consumes:
