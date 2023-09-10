@@ -53,7 +53,7 @@ func (a *AuthController) Register(c *fiber.Ctx) error {
 //	@Param			credentials	body		dto.LoginRequest	true	"Credentials"
 //	@Success		201			{object}	dto.LoginResponse
 //	@Failure		422			{object}	exception.ValErrors
-//	@Failure		400			{object}	exception.ValErrors
+//	@Failure		400			{object}	exception.HttpError
 //	@Failure		404			{object}	exception.HttpError
 //	@Failure		500			{object}	exception.HttpError
 //	@Router			/auth/login [post]
@@ -105,6 +105,21 @@ func (a *AuthController) getRefreshToken(c *fiber.Ctx) (string, error) {
 	return payload.RefreshToken, nil
 }
 
+// Logout godoc
+//
+//	@Summary		Logout
+//	@Description	Remove refresh token from database
+//	@Tags			auth
+//	@Accept			json
+//	@Produce		json
+//	@Param			refreshToken	body		dto.LogoutRequest	true	"Refresh token"
+//	@Success		200				{object}	dto.LogoutResponse
+//	@Failure		422				{object}	exception.ValErrors
+//	@Failure		401				{object}	exception.HttpError
+//	@Failure		404				{object}	exception.HttpError
+//	@Failure		500				{object}	exception.HttpError
+//	@Router			/auth/logout [delete]
+//	@Security		ApiKeyAuth
 func (a *AuthController) Logout(c *fiber.Ctx) error {
 	refreshToken, err := a.getRefreshToken(c)
 	if err != nil {
@@ -135,6 +150,21 @@ func (a *AuthController) Logout(c *fiber.Ctx) error {
 	return c.JSON(response)
 }
 
+// Refresh godoc
+//
+//	@Summary		Refresh
+//	@Description	Refresh access token using refresh token
+//	@Tags			auth
+//	@Accept			json
+//	@Produce		json
+//	@Param			refreshToken	body		dto.RefreshRequest	true	"Refresh token"
+//	@Success		200				{object}	dto.RefreshResponse
+//	@Failure		422				{object}	exception.ValErrors
+//	@Failure		401				{object}	exception.HttpError
+//	@Failure		400				{object}	exception.HttpError
+//	@Failure		404				{object}	exception.HttpError
+//	@Failure		500				{object}	exception.HttpError
+//	@Router			/auth/refresh [patch]
 func (a *AuthController) Refresh(c *fiber.Ctx) error {
 	refreshToken, err := a.getRefreshToken(c)
 	if err != nil {

@@ -28,27 +28,27 @@ type (
 		Password string `json:"password" valid:"required~Password is required" validate:"required" example:"bruh1234" minLength:"8"`
 	}
 	LoginResponseData struct {
-		AccessToken  string `json:"access_token"`
-		RefreshToken string `json:"refresh_token"`
+		AccessToken  string `json:"access_token" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."`
+		RefreshToken string `json:"refresh_token" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."`
 	}
 	LoginResponse struct {
-		Message string            `json:"message"`
+		Message string            `json:"message" example:"You've logged in successfully"`
 		Data    LoginResponseData `json:"data"`
 	}
 
 	LogoutRequest struct {
-		RefreshToken string `json:"refresh_token" valid:"required~Refresh token is required"`
+		RefreshToken string `json:"refresh_token" valid:"required~Refresh token is required" validate:"required" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."`
 	}
 	LogoutResponse struct {
-		Message string `json:"message"`
+		Message string `json:"message" example:"You've logged out successfully"`
 	}
 
 	RefreshRequest      = LogoutRequest
 	RefreshResponseData struct {
-		AccessToken string `json:"access_token"`
+		AccessToken string `json:"access_token" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."`
 	}
 	RefreshResponse struct {
-		Message string              `json:"message"`
+		Message string              `json:"message" example:"Your access token has been refreshed successfully"`
 		Data    RefreshResponseData `json:"data"`
 	}
 )

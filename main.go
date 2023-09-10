@@ -14,6 +14,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/pprof"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/swagger"
+
 	"github.com/spacenotes-id/server/config"
 	"github.com/spacenotes-id/server/container"
 	"github.com/spacenotes-id/server/database/postgres"

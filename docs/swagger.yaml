@@ -20,13 +20,52 @@ definitions:
       data:
         $ref: '#/definitions/dto.LoginResponseData'
       message:
+        example: You've logged in successfully
         type: string
     type: object
   dto.LoginResponseData:
     properties:
       access_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         type: string
       refresh_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+    type: object
+  dto.LogoutRequest:
+    properties:
+      refresh_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+    required:
+    - refresh_token
+    type: object
+  dto.LogoutResponse:
+    properties:
+      message:
+        example: You've logged out successfully
+        type: string
+    type: object
+  dto.RefreshRequest:
+    properties:
+      refresh_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+    required:
+    - refresh_token
+    type: object
+  dto.RefreshResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.RefreshResponseData'
+      message:
+        example: Your access token has been refreshed successfully
+        type: string
+    type: object
+  dto.RefreshResponseData:
+    properties:
+      access_token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         type: string
     type: object
   dto.RegisterRequest:
@@ -130,7 +169,7 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/exception.ValErrors'
+            $ref: '#/definitions/exception.HttpError'
         "404":
           description: Not Found
           schema:
@@ -144,6 +183,88 @@ paths:
           schema:
             $ref: '#/definitions/exception.HttpError'
       summary: Login
+      tags:
+      - auth
+  /auth/logout:
+    delete:
+      consumes:
+      - application/json
+      description: Remove refresh token from database
+      parameters:
+      - description: Refresh token
+        in: body
+        name: refreshToken
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LogoutRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.LogoutResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/exception.ValErrors'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+      security:
+      - ApiKeyAuth: []
+      summary: Logout
+      tags:
+      - auth
+  /auth/refresh:
+    patch:
+      consumes:
+      - application/json
+      description: Refresh access token using refresh token
+      parameters:
+      - description: Refresh token
+        in: body
+        name: refreshToken
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.RefreshResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/exception.ValErrors'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+      summary: Refresh
       tags:
       - auth
   /auth/register:
