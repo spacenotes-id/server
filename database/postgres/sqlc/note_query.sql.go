@@ -69,6 +69,7 @@ const findAllNotes = `-- name: FindAllNotes :many
 SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes 
 WHERE user_id = $1 AND 
 (title ILIKE $2 OR body ILIKE $2)
+ORDER BY id
 `
 
 type FindAllNotesParams struct {
@@ -109,6 +110,7 @@ const findAllNotesBySpaceID = `-- name: FindAllNotesBySpaceID :many
 SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes 
 WHERE space_id = $1 AND
 (title ILIKE $2 OR body ILIKE $2)
+ORDER BY id
 `
 
 type FindAllNotesBySpaceIDParams struct {
@@ -149,6 +151,7 @@ const findAllNotesBySpaceIDAndStatus = `-- name: FindAllNotesBySpaceIDAndStatus 
 SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes
 WHERE space_id = $1 AND status = $2 AND
 (title ILIKE $3 OR body ILIKE $3)
+ORDER BY id
 `
 
 type FindAllNotesBySpaceIDAndStatusParams struct {
@@ -190,6 +193,7 @@ const findAllNotesByStatus = `-- name: FindAllNotesByStatus :many
 SELECT id, user_id, space_id, title, body, status, created_at, updated_at FROM notes 
 WHERE user_id = $1 AND status = $2 AND
 (title ILIKE $3 OR body ILIKE $3)
+ORDER BY id
 `
 
 type FindAllNotesByStatusParams struct {

@@ -8,22 +8,26 @@ INSERT INTO notes (
 -- name: FindAllNotes :many
 SELECT * FROM notes 
 WHERE user_id = $1 AND 
-(title ILIKE sqlc.arg('keyword') OR body ILIKE sqlc.arg('keyword'));
+(title ILIKE sqlc.arg('keyword') OR body ILIKE sqlc.arg('keyword'))
+ORDER BY id;
 
 -- name: FindAllNotesByStatus :many
 SELECT * FROM notes 
 WHERE user_id = $1 AND status = $2 AND
-(title ILIKE sqlc.arg('keyword') OR body ILIKE sqlc.arg('keyword'));
+(title ILIKE sqlc.arg('keyword') OR body ILIKE sqlc.arg('keyword'))
+ORDER BY id;
 
 -- name: FindAllNotesBySpaceID :many
 SELECT * FROM notes 
 WHERE space_id = $1 AND
-(title ILIKE sqlc.arg('keyword') OR body ILIKE sqlc.arg('keyword'));
+(title ILIKE sqlc.arg('keyword') OR body ILIKE sqlc.arg('keyword'))
+ORDER BY id;
 
 -- name: FindAllNotesBySpaceIDAndStatus :many
 SELECT * FROM notes
 WHERE space_id = $1 AND status = $2 AND
-(title ILIKE sqlc.arg('keyword') OR body ILIKE sqlc.arg('keyword'));
+(title ILIKE sqlc.arg('keyword') OR body ILIKE sqlc.arg('keyword'))
+ORDER BY id;
 
 -- name: FindNoteByID :one
 SELECT * FROM notes WHERE id = $1 LIMIT 1;
