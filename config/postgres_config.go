@@ -4,4 +4,8 @@ import (
 	"os"
 )
 
-var PostgresURL = os.Getenv("DATABASE_URL")
+var (
+	PostgresURL  = os.Getenv("DATABASE_URL")
+	MigrationDir = os.Getenv("DBMATE_MIGRATIONS_DIR")
+	SchemaFile   = os.Getenv("DBMATE_SCHEMA_FILE")
+)
