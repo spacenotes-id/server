@@ -1,7 +1,27 @@
-version: '3.8'
 services:
   server:
     build: .
-    env_file:
-      - .env
-    network_mode: host
+    restart: on-failure
+    ports:
+      - '8080:8080'
+    environment:
+      PORT: 8080
+      JWT_ACCESS_TOKEN_KEY: 0dd46d7533d5f7d696631920392e7b6c
+      JWT_REFRESH_TOKEN_KEY: 4d4d2ac98a62cb4d925a3d17df71d54c
+      DATABASE_URL: postgres://postgres:postgres@db:5432/spacenotes?sslmode=disable
+      DBMATE_MIGRATIONS_DIR: ./database/postgres/migration/
+      DBMATE_SCHEMA_FILE: ./database/postgres/schema.sql
+      SERVER_HOST: localhost:8080
+      SERVER_SCHEME: http
+    depends_on:
+      - db
+  db:
+    image: postgres:alpine3.18
+    restart: unless-stopped
+    user: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: spacenotes
+    expose:
+      - 5432
