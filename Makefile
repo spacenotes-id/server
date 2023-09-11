@@ -1,7 +1,7 @@
 all: start
 
 build:
-	GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o ./bin/spacenotes-server .
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o ./bin/spacenotes-server .
 
 install:
 	go install .
