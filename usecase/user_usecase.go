@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5/pgtype"
+
 	"github.com/spacenotes-id/server/database/postgres/sqlc"
 	"github.com/spacenotes-id/server/dto"
 	"github.com/spacenotes-id/server/helper/sql"
@@ -29,7 +30,14 @@ func (u *UserUsecase) FindUserByID(
 	}
 
 	response := &dto.FindUserByIDResponse{
-		Data: *user,
+		Data: dto.FindUserByIDData{
+			ID:        user.ID,
+			FullName:  user.FullName.String,
+			Username:  user.Username,
+			Email:     user.Email,
+			CreatedAt: user.CreatedAt.Time,
+			UpdatedAt: user.UpdatedAt.Time,
+		},
 	}
 
 	return response, nil
@@ -88,7 +96,14 @@ func (u *UserUsecase) UpdateUser(
 
 	response := &dto.UpdateUserResponse{
 		Message: "Your account data has been updated successfully ",
-		Data:    *updatedUser,
+		Data: dto.FindUserByIDData{
+			ID:        updatedUser.ID,
+			FullName:  updatedUser.FullName.String,
+			Username:  updatedUser.Username,
+			Email:     updatedUser.Email,
+			CreatedAt: updatedUser.CreatedAt.Time,
+			UpdatedAt: updatedUser.UpdatedAt.Time,
+		},
 	}
 
 	return response, nil
@@ -130,7 +145,14 @@ func (u *UserUsecase) UpdateEmail(
 
 	response := &dto.UpdateUserResponse{
 		Message: "Your email has been updated successfully ",
-		Data:    sqlc.UpdateUserRow(*updatedUser),
+		Data: dto.FindUserByIDData{
+			ID:        updatedUser.ID,
+			FullName:  updatedUser.FullName.String,
+			Username:  updatedUser.Username,
+			Email:     updatedUser.Email,
+			CreatedAt: updatedUser.CreatedAt.Time,
+			UpdatedAt: updatedUser.UpdatedAt.Time,
+		},
 	}
 
 	return response, nil
