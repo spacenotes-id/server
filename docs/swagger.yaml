@@ -2,6 +2,32 @@ basePath: /v1
 consumes:
 - application/json
 definitions:
+  dto.FindUserByIDData:
+    properties:
+      created_at:
+        example: "2023-09-22T04:11:26.597Z"
+        type: string
+      email:
+        example: me@tfkhdyt.my.id
+        type: string
+      full_name:
+        example: Taufik Hidayat
+        type: string
+      id:
+        example: 1
+        type: integer
+      updated_at:
+        example: "2023-09-22T04:11:26.597Z"
+        type: string
+      username:
+        example: tfkhdyt
+        type: string
+    type: object
+  dto.FindUserByIDResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.FindUserByIDData'
+    type: object
   dto.LoginRequest:
     properties:
       email:
@@ -116,6 +142,27 @@ definitions:
         type: integer
       username:
         example: tfkhdyt
+        type: string
+    type: object
+  dto.UpdateUserRequest:
+    properties:
+      full_name:
+        example: Fauzi Fathirohman
+        maxLength: 70
+        minLength: 2
+        type: string
+      username:
+        example: fauzi123
+        maxLength: 16
+        minLength: 3
+        type: string
+    type: object
+  dto.UpdateUserResponse:
+    properties:
+      data:
+        $ref: '#/definitions/dto.FindUserByIDData'
+      message:
+        example: 'Your account data has been updated successfully '
         type: string
     type: object
   exception.HttpError:
@@ -301,6 +348,76 @@ paths:
       summary: Register
       tags:
       - auth
+  /users/me:
+    get:
+      description: Show my account data
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.FindUserByIDResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+      security:
+      - ApiKeyAuth: []
+      summary: Find my account
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update my account data
+      parameters:
+      - description: Update user payload
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UpdateUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/exception.ValErrors'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/exception.HttpError'
+      security:
+      - ApiKeyAuth: []
+      summary: Update my account
+      tags:
+      - users
 produces:
 - application/json
 securityDefinitions:
