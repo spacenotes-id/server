@@ -3,6 +3,7 @@ package route
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/goioc/di"
+
 	"github.com/spacenotes-id/server/controller"
 	"github.com/spacenotes-id/server/middleware"
 )
