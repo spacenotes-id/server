@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/asaskevich/govalidator"
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/spacenotes-id/server/dto"
 	"github.com/spacenotes-id/server/helper/auth"
 	"github.com/spacenotes-id/server/helper/exception"
@@ -15,7 +16,10 @@ type SpaceController struct {
 }
 
 func (s *SpaceController) CreateSpace(c *fiber.Ctx) error {
-	userID := auth.GetUserIDFromClaims(c)
+	userID, err := auth.GetUserIDFromClaims(c)
+	if err != nil {
+		return err
+	}
 
 	payload := new(dto.CreateSpaceRequest)
 	if err := c.BodyParser(payload); err != nil {
@@ -36,7 +40,10 @@ func (s *SpaceController) CreateSpace(c *fiber.Ctx) error {
 }
 
 func (s *SpaceController) FindAllSpacesByUserID(c *fiber.Ctx) error {
-	userID := auth.GetUserIDFromClaims(c)
+	userID, err := auth.GetUserIDFromClaims(c)
+	if err != nil {
+		return err
+	}
 
 	response, err := s.spaceUsecase.FindAllSpacesByUserID(userID)
 	if err != nil {

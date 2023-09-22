@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
+
 	"github.com/spacenotes-id/server/database/postgres/sqlc"
 	"github.com/spacenotes-id/server/dto"
 	"github.com/spacenotes-id/server/helper/auth"
@@ -16,7 +17,10 @@ type NoteController struct {
 }
 
 func (n *NoteController) CreateNote(c *fiber.Ctx) error {
-	userID := auth.GetUserIDFromClaims(c)
+	userID, err := auth.GetUserIDFromClaims(c)
+	if err != nil {
+		return err
+	}
 
 	payload := new(dto.CreateNoteRequest)
 	if err := validation.ValidateBody(c, payload); err != nil {
@@ -32,7 +36,10 @@ func (n *NoteController) CreateNote(c *fiber.Ctx) error {
 }
 
 func (n *NoteController) FindAllNotes(c *fiber.Ctx) error {
-	userID := auth.GetUserIDFromClaims(c)
+	userID, err := auth.GetUserIDFromClaims(c)
+	if err != nil {
+		return err
+	}
 
 	query := c.Queries()
 	if err := validation.ValidateStatusQuery(
@@ -84,7 +91,11 @@ func (n *NoteController) FindNoteByID(c *fiber.Ctx) error {
 }
 
 func (n *NoteController) UpdateNote(c *fiber.Ctx) error {
-	userID := auth.GetUserIDFromClaims(c)
+	userID, err := auth.GetUserIDFromClaims(c)
+	if err != nil {
+		return err
+	}
+
 	noteID, err := note.GetNoteIDFromParams(c)
 	if err != nil {
 		return err
