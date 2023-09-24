@@ -84,24 +84,11 @@ func main() {
 			})
 		},
 	})
+
+	cors.ConfigDefault.AllowCredentials = true
+
+	app.Use(cors.New(cors.ConfigDefault))
 	app.Use(recover.New())
-	app.Use(cors.New(cors.Config{
-		Next:             nil,
-		AllowOriginsFunc: nil,
-		AllowOrigins:     "*",
-		AllowMethods: strings.Join([]string{
-			fiber.MethodGet,
-			fiber.MethodPost,
-			fiber.MethodHead,
-			fiber.MethodPut,
-			fiber.MethodDelete,
-			fiber.MethodPatch,
-		}, ","),
-		AllowHeaders:     "",
-		AllowCredentials: true,
-		ExposeHeaders:    "",
-		MaxAge:           0,
-	}))
 	app.Use(pprof.New())
 
 	port := "8080"
