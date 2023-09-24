@@ -74,6 +74,7 @@ func (a *AuthController) Login(c *fiber.Ctx) error {
 		Path:     "/",
 		Expires:  time.Now().Add(15 * time.Minute),
 		HTTPOnly: true,
+		SameSite: "None",
 	})
 
 	c.Cookie(&fiber.Cookie{
@@ -82,6 +83,7 @@ func (a *AuthController) Login(c *fiber.Ctx) error {
 		Path:     "/",
 		Expires:  time.Now().Add(720 * time.Hour),
 		HTTPOnly: true,
+		SameSite: "None",
 	})
 
 	return c.Status(201).JSON(result)
@@ -137,6 +139,7 @@ func (a *AuthController) Logout(c *fiber.Ctx) error {
 		Path:     "/",
 		Expires:  time.Date(2002, time.April, 1, 23, 0, 0, 0, time.UTC),
 		HTTPOnly: true,
+		SameSite: "None",
 	})
 
 	c.Cookie(&fiber.Cookie{
@@ -145,6 +148,7 @@ func (a *AuthController) Logout(c *fiber.Ctx) error {
 		Path:     "/",
 		Expires:  time.Date(2002, time.April, 1, 23, 0, 0, 0, time.UTC),
 		HTTPOnly: true,
+		SameSite: "None",
 	})
 
 	return c.JSON(response)
@@ -182,6 +186,7 @@ func (a *AuthController) Refresh(c *fiber.Ctx) error {
 		Path:     "/",
 		Expires:  time.Now().Add(15 * time.Minute),
 		HTTPOnly: true,
+		SameSite: "None",
 	})
 
 	return c.JSON(response)
