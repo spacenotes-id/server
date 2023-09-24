@@ -85,7 +85,18 @@ func main() {
 		},
 	})
 	app.Use(recover.New())
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+		AllowMethods: strings.Join([]string{
+			fiber.MethodGet,
+			fiber.MethodPost,
+			fiber.MethodHead,
+			fiber.MethodPut,
+			fiber.MethodDelete,
+			fiber.MethodPatch,
+		}, ","),
+		AllowCredentials: true,
+	}))
 	app.Use(pprof.New())
 
 	port := "8080"
