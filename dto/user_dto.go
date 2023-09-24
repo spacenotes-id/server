@@ -27,8 +27,8 @@ type (
 	}
 
 	UpdateEmailRequest struct {
-		NewEmail string `json:"new_email" valid:"required~New email is required,email~Invalid email"`
-		Password string `json:"password"  valid:"required~Password is required"`
+		NewEmail string `json:"new_email" valid:"required~New email is required,email~Invalid email" validate:"required" example:"tfkhdyt@proton.me"`
+		Password string `json:"password"  valid:"required~Password is required"                      validate:"required" example:"bruh1234"`
 	}
 
 	UpdatePasswordRequest struct {

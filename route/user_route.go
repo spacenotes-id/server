@@ -14,11 +14,11 @@ func RegisterUserRoute(r fiber.Router) {
 
 	r.Get("/me", middleware.JwtMiddleware, userController.FindMyAccount)
 	r.Put("/me", middleware.JwtMiddleware, userController.UpdateMyAccount)
-	r.Patch("me/email", middleware.JwtMiddleware, userController.UpdateMyEmail)
+	r.Patch("/me/email", middleware.JwtMiddleware, userController.UpdateMyEmail)
 	r.Patch(
-		"me/password",
+		"/me/password",
 		middleware.JwtMiddleware,
 		userController.UpdateMyPassword,
 	)
-	r.Delete("me", middleware.JwtMiddleware, userController.DeleteMyAccount)
+	r.Delete("/me", middleware.JwtMiddleware, userController.DeleteMyAccount)
 }

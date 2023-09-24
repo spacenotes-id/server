@@ -76,6 +76,21 @@ func (u *UserController) UpdateMyAccount(c *fiber.Ctx) error {
 	return c.JSON(result)
 }
 
+// UpdateMyEmail godoc
+//
+//	@Summary		Update my email
+//	@Description	Update my account email
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Param			account	body		dto.UpdateEmailRequest	true	"Update email payload"
+//	@Success		200		{object}	dto.UpdateUserResponse
+//	@Success		400		{object}	exception.HttpError
+//	@Success		404		{object}	exception.HttpError
+//	@Success		500		{object}	exception.HttpError
+//	@Success		422		{object}	exception.ValErrors
+//	@Router			/users/me/email [patch]
+//	@Security		ApiKeyAuth
 func (u *UserController) UpdateMyEmail(c *fiber.Ctx) error {
 	userID, err := auth.GetUserIDFromClaims(c)
 	if err != nil {
@@ -83,13 +98,8 @@ func (u *UserController) UpdateMyEmail(c *fiber.Ctx) error {
 	}
 
 	payload := new(dto.UpdateEmailRequest)
-	if err := c.BodyParser(payload); err != nil {
-		return fiber.
-			NewError(fiber.StatusUnprocessableEntity, "Failed to parse body")
-	}
-
-	if _, err := govalidator.ValidateStruct(payload); err != nil {
-		return exception.NewValidationError(err)
+	if err := validation.ValidateBody(c, payload); err != nil {
+		return err
 	}
 
 	result, err := u.userUsecase.UpdateEmail(userID, payload)

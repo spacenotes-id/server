@@ -375,6 +375,69 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users/me/email": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Update my account email",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update my email",
+                "parameters": [
+                    {
+                        "description": "Update email payload",
+                        "name": "account",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateEmailRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateUserResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpError"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/exception.ValErrors"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/exception.HttpError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -577,6 +640,23 @@ const docTemplate = `{
                 "username": {
                     "type": "string",
                     "example": "tfkhdyt"
+                }
+            }
+        },
+        "dto.UpdateEmailRequest": {
+            "type": "object",
+            "required": [
+                "new_email",
+                "password"
+            ],
+            "properties": {
+                "new_email": {
+                    "type": "string",
+                    "example": "tfkhdyt@proton.me"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "bruh1234"
                 }
             }
         },
