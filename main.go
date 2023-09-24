@@ -86,7 +86,9 @@ func main() {
 	})
 	app.Use(recover.New())
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
+		Next:             nil,
+		AllowOriginsFunc: nil,
+		AllowOrigins:     "*",
 		AllowMethods: strings.Join([]string{
 			fiber.MethodGet,
 			fiber.MethodPost,
@@ -95,7 +97,10 @@ func main() {
 			fiber.MethodDelete,
 			fiber.MethodPatch,
 		}, ","),
+		AllowHeaders:     "",
 		AllowCredentials: true,
+		ExposeHeaders:    "",
+		MaxAge:           0,
 	}))
 	app.Use(pprof.New())
 
